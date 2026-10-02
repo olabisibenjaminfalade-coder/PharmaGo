@@ -4,7 +4,7 @@
 **Client target:** Flutter application for web, Windows, Linux, macOS, Android and iOS  
 **Market:** Pharmacy and personal-care products in Gombe, Nigeria  
 **Currency:** Nigerian naira (NGN)  
-**Evidence status:** Requirements derived from the supplied brief and inspection of the existing PharmaGo storefront. Stakeholder interviews and questionnaires have not yet been conducted. Production payment and deployment credentials have not been supplied.
+**Evidence status:** Requirements derived from the supplied brief and inspection of the existing PharmaGo storefront. Flutter 3.47.6/Dart 3.13.5 installed; Flutter web build, widget test, API integration tests and static analysis have passed. Native Android/Windows toolchains are unavailable in this environment. Stakeholder interviews/questionnaires remain outstanding. Flutter web screenshots were captured using synthetic demo accounts and data. Production payment and deployment credentials have not been supplied.
 
 ## 1. Executive summary
 
@@ -16,7 +16,7 @@ The architecture uses one Flutter/Dart client codebase for web, desktop and mobi
 
 | Area | Finding | Conditions and risks |
 |---|---|---|
-| Technical | Implemented as a Flutter/Dart client, Dart Shelf REST API and SQLite development database. | Android/iOS builds also need platform SDKs and, for iOS signing, macOS/Xcode. Windows/Linux/macOS builds need host toolchains. Production hosting, database migrations, monitoring, backups, security review and target-device verification remain necessary. |
+| Technical | Implemented as a Flutter/Dart client, Dart Shelf REST API and SQLite development database; web build and automated tests pass. | Android/iOS builds also need platform SDKs and, for iOS signing, macOS/Xcode. Windows/Linux/macOS builds need host toolchains. Production hosting, database migrations, monitoring, backups, security review and target-device verification remain necessary. |
 | Economic | A student prototype can use open-source development tools and local test data at little direct software cost. | Hosting, a production database, domain/TLS, transactional messaging, backups, payment-provider fees, maintenance and compliance work have ongoing costs. Obtain local cost estimates before launch. |
 | Operational | The existing storefront indicates an initial product-browsing and Gombe-delivery workflow. A marketplace is operationally plausible if buyers, licensed sellers and a support/pharmacy team agree on listing and fulfilment processes. | No stakeholder acceptance study has been performed. Confirm seller onboarding, stock accuracy, returns, prescription handling, service areas, support ownership and staff training with actual participants. |
 | Legal | A pharmacy marketplace can be designed to minimize personal data, use a regulated payment provider and restrict product categories. | Before launch obtain qualified Nigerian legal/compliance advice on the Nigeria Data Protection Act and NDPC obligations, pharmacy premises/professional licensing, NAFDAC product rules, prescription-only medicines, consumer protection, tax, records retention, cross-border data handling and payment-provider/PCI scope. This report is not legal advice. |
@@ -442,26 +442,37 @@ The diagram reflects the local SQLite schema. Category-to-product association is
 
 ## 9. Testing evidence and screenshots
 
-The static predecessor was checked in-browser for catalogue, product pages, cart and demo checkout. Current evidence is collected from the Flutter widget and Dart API integration tests; a test is reported as passed only after it actually runs in this workspace.
+The static predecessor was checked in-browser for catalogue, product pages, cart and demo checkout. The current Flutter web demo was also exercised through catalogue, product detail, cart, checkout and a simulated order confirmation. Automated evidence is from the Flutter widget test and Dart API integration tests. API test fixtures use the explicit test-only 10,000-iteration KDF constructor for speed; the server uses 600,000 iterations by default. The test results do not replace a production security review or live-payment validation.
 
 | ID | Test case | Input | Expected result | Result |
 |---|---|---|---|---|
-| T-01 | Registration validation | Weak and valid buyer credentials | Weak credentials rejected; account created without exposing a password/hash | Not run |
-| T-02 | Generic invalid login | Unknown email | Generic authentication error; no session | Not run |
-| T-03 | Seller ownership isolation | Seller B updates Seller A's listing | Update denied; buyer role cannot manage listings | Not run |
-| T-04 | Search | Query for a seller listing | Only matching active products returned | Not run |
-| T-05 | Cart quantity guard | Quantity exceeds current stock | Server rejects the change | Not run |
-| T-06 | Checkout price integrity | Client supplies a forged total/price | Server calculates the order from persisted prices | Not run |
-| T-07 | Checkout transaction/snapshot | Valid cart and address | Order snapshot created and stock decremented atomically | Not run |
-| T-08 | Duplicate checkout | Retry same buyer/idempotency key | Existing order returned; no duplicate order | Not run |
-| T-09 | Payment status clarity | Demo and pay-on-delivery choices | Both states remain unpaid with accurate status | Not run |
-| T-10 | Fulfilment state machine | Valid progression and illegal transition | Valid status changes commit; invalid transition is rejected | Not run |
-| T-11 | Browser CORS | Allowed/disallowed origins and checkout preflight | Origin allowlist enforced; idempotency header allowed | Not run |
-| T-12 | Narrow sign-in layout | 360 px wide widget viewport | Sign-in and registration render without layout exceptions | Not run |
+| T-01 | Registration validation | Weak and valid buyer credentials | Weak credentials rejected; account created without exposing a password/hash | Passed (API integration) |
+| T-02 | Generic invalid login | Unknown email | Generic authentication error; no session | Passed (API integration) |
+| T-03 | Seller ownership isolation | Seller B updates Seller A's listing | Update denied; buyer role cannot manage listings | Passed (API integration) |
+| T-04 | Search | Query for a seller listing | Only matching active products returned | Passed (API integration) |
+| T-05 | Cart quantity guard | Quantity exceeds current stock | Server rejects the change | Passed (API integration) |
+| T-06 | Checkout price integrity | Client supplies a forged total/price | Server calculates the order from persisted prices | Passed (API integration) |
+| T-07 | Checkout transaction/snapshot | Valid cart and address | Order snapshot created and stock decremented atomically | Passed (API integration) |
+| T-08 | Duplicate checkout | Retry same buyer/idempotency key | Existing order returned; no duplicate order | Passed (API integration) |
+| T-09 | Payment status clarity | Demo and pay-on-delivery choices | Both states remain unpaid with accurate status | Passed (API integration) |
+| T-10 | Fulfilment state machine | Valid progression and illegal transition | Valid status changes commit; invalid transition is rejected | Passed (API integration) |
+| T-11 | Browser CORS | Allowed/disallowed origins and checkout preflight | Origin allowlist enforced; idempotency header allowed | Passed (API integration) |
+| T-12 | Narrow sign-in layout | 360 px wide widget viewport | Sign-in and registration render without layout exceptions | Passed (Flutter widget test) |
 
 ### Screenshot evidence
 
-Screenshots of the Flutter application have not been captured yet. Once the app is launched with test data, capture the buyer catalogue/search, product details, sign-in/registration, cart, checkout, buyer order history, seller product management, seller fulfilment queue and admin moderation/reporting. Store unaltered captures in `screenshots/` and identify target, viewport/device, build and test ID. Do not include real personal, health or payment data.
+The following unaltered captures are from the local Flutter web debug build using synthetic demo data. Viewports are the browser sizes used during capture; these are demonstration evidence, not production screenshots.
+
+| File | Screen | Notes |
+|---|---|---|
+| `screenshots/01-sign-in.png` | Sign-in | Blank credentials; 850 x 457 browser viewport |
+| `screenshots/02-catalogue.png` | Buyer catalogue | Seeded catalogue and category filters; 1000 x 900 |
+| `screenshots/03-product-detail.png` | Product details | Antiseptic First Aid demo listing; 850 x 457 |
+| `screenshots/04-cart.png` | Buyer cart | One demo item; 850 x 457 |
+| `screenshots/05-checkout.png` | Checkout | Synthetic delivery address; payment is simulation only; 1000 x 900 |
+| `screenshots/06-order-confirmation.png` | Order confirmation | Demo order; no payment was taken; 1000 x 900 |
+
+Registration, buyer order history, seller listing/fulfilment and administrator screens have not yet been captured. No stakeholder research results are inferred from these UI captures.
 
 ## 10. User documentation
 

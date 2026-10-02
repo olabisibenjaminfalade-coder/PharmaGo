@@ -20,9 +20,16 @@ class CartScreen extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.shopping_bag_outlined, size: 50, color: Color(0xff12483b)),
+              Icon(
+                Icons.shopping_bag_outlined,
+                size: 50,
+                color: Color(0xff12483b),
+              ),
               SizedBox(height: 12),
-              Text('Your cart is empty', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+              Text(
+                'Your cart is empty',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              ),
               SizedBox(height: 5),
               Text('Browse the shop and add products to get started.'),
             ],
@@ -38,7 +45,8 @@ class CartScreen extends StatelessWidget {
           children: [
             Text('Your cart', style: Theme.of(context).textTheme.headlineSmall),
             const SizedBox(height: 12),
-            for (final line in cart.items) _CartLineTile(line: line, controller: controller),
+            for (final line in cart.items)
+              _CartLineTile(line: line, controller: controller),
             const SizedBox(height: 16),
             Card(
               child: Padding(
@@ -46,7 +54,10 @@ class CartScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    _TotalRow(label: 'Subtotal', value: formatNaira(cart.total)),
+                    _TotalRow(
+                      label: 'Subtotal',
+                      value: formatNaira(cart.total),
+                    ),
                     const SizedBox(height: 8),
                     const Text(
                       'Delivery fee is confirmed by the seller before the order is finalized.',
@@ -57,10 +68,11 @@ class CartScreen extends StatelessWidget {
                       onPressed: controller.busy
                           ? null
                           : () => Navigator.of(context).push(
-                                MaterialPageRoute<void>(
-                                  builder: (_) => CheckoutScreen(controller: controller),
-                                ),
+                              MaterialPageRoute<void>(
+                                builder: (_) =>
+                                    CheckoutScreen(controller: controller),
                               ),
+                            ),
                       child: const Text('Continue to checkout'),
                     ),
                   ],
@@ -82,62 +94,71 @@ class _CartLineTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Row(
-            children: [
-              SizedBox(
-                width: 65,
-                height: 65,
-                child: Image.asset(
-                  line.product.image,
-                  fit: BoxFit.contain,
-                  errorBuilder: (_, __, ___) =>
-                      const Icon(Icons.medication_outlined, size: 36),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(line.product.name,
-                        style: const TextStyle(fontWeight: FontWeight.w700)),
-                    Text(line.product.size,
-                        style: const TextStyle(
-                            color: Color(0xff707b76), fontSize: 11)),
-                    Text(formatNaira(line.product.price * line.quantity),
-                        style: const TextStyle(
-                            color: Color(0xff12483b),
-                            fontWeight: FontWeight.w800)),
-                  ],
-                ),
-              ),
-              IconButton(
-                tooltip: 'Remove one',
-                onPressed: controller.busy
-                    ? null
-                    : () => controller.changeQuantity(
-                          line.product.id,
-                          line.quantity - 1,
-                        ),
-                icon: const Icon(Icons.remove_circle_outline),
-              ),
-              Text('${line.quantity}'),
-              IconButton(
-                tooltip: 'Add one',
-                onPressed: controller.busy
-                    ? null
-                    : () => controller.changeQuantity(
-                          line.product.id,
-                          line.quantity + 1,
-                        ),
-                icon: const Icon(Icons.add_circle_outline),
-              ),
-            ],
+    child: Padding(
+      padding: const EdgeInsets.all(12),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 65,
+            height: 65,
+            child: Image.asset(
+              line.product.image,
+              fit: BoxFit.contain,
+              errorBuilder: (_, _, _) =>
+                  const Icon(Icons.medication_outlined, size: 36),
+            ),
           ),
-        ),
-      );
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  line.product.name,
+                  style: const TextStyle(fontWeight: FontWeight.w700),
+                ),
+                Text(
+                  line.product.size,
+                  style: const TextStyle(
+                    color: Color(0xff707b76),
+                    fontSize: 11,
+                  ),
+                ),
+                Text(
+                  formatNaira(line.product.price * line.quantity),
+                  style: const TextStyle(
+                    color: Color(0xff12483b),
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          IconButton(
+            tooltip: 'Remove one',
+            onPressed: controller.busy
+                ? null
+                : () => controller.changeQuantity(
+                    line.product.id,
+                    line.quantity - 1,
+                  ),
+            icon: const Icon(Icons.remove_circle_outline),
+          ),
+          Text('${line.quantity}'),
+          IconButton(
+            tooltip: 'Add one',
+            onPressed: controller.busy
+                ? null
+                : () => controller.changeQuantity(
+                    line.product.id,
+                    line.quantity + 1,
+                  ),
+            icon: const Icon(Icons.add_circle_outline),
+          ),
+        ],
+      ),
+    ),
+  );
 }
 
 class CheckoutScreen extends StatefulWidget {
@@ -195,86 +216,97 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: const Text('Checkout')),
-        body: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 680),
-            child: Form(
-              key: _formKey,
-              child: ListView(
-                padding: const EdgeInsets.all(20),
-                children: [
-                  Text('Delivery details',
-                      style: Theme.of(context).textTheme.titleLarge),
-                  const SizedBox(height: 14),
-                  TextFormField(
-                    controller: _address,
-                    minLines: 2,
-                    maxLines: 3,
-                    decoration: const InputDecoration(
-                      labelText: 'Delivery address',
-                      hintText: 'House number, street, area and city',
-                    ),
-                    validator: (value) => (value?.trim().length ?? 0) < 5
-                        ? 'Enter a complete delivery address.'
-                        : null,
-                  ),
-                  const SizedBox(height: 22),
-                  Text('Payment method',
-                      style: Theme.of(context).textTheme.titleLarge),
-                  const SizedBox(height: 8),
-                  RadioListTile<String>(
-                    value: 'demo',
-                    groupValue: _paymentMethod,
-                    onChanged: (value) =>
-                        setState(() => _paymentMethod = value ?? 'demo'),
-                    title: const Text('Simulated card payment'),
-                    subtitle: const Text(
-                        'Demo only. No card details are requested and no charge is made.'),
-                  ),
-                  RadioListTile<String>(
-                    value: 'pay_on_delivery',
-                    groupValue: _paymentMethod,
-                    onChanged: (value) => setState(
-                        () => _paymentMethod = value ?? 'pay_on_delivery'),
-                    title: const Text('Pay on delivery'),
-                    subtitle: const Text(
-                        'Demo order status only; payment is not processed.'),
-                  ),
-                  const Card(
-                    child: Padding(
-                      padding: EdgeInsets.all(14),
-                      child: Text(
-                        'Payment demo: this marketplace does not accept payment credentials or process real payments. A production release must use a server-verified payment provider.',
-                        style: TextStyle(fontSize: 12, height: 1.5),
+    appBar: AppBar(title: const Text('Checkout')),
+    body: Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 680),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            padding: const EdgeInsets.all(20),
+            children: [
+              Text(
+                'Delivery details',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const SizedBox(height: 14),
+              TextFormField(
+                controller: _address,
+                minLines: 2,
+                maxLines: 3,
+                decoration: const InputDecoration(
+                  labelText: 'Delivery address',
+                  hintText: 'House number, street, area and city',
+                ),
+                validator: (value) => (value?.trim().length ?? 0) < 5
+                    ? 'Enter a complete delivery address.'
+                    : null,
+              ),
+              const SizedBox(height: 22),
+              Text(
+                'Payment method',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const SizedBox(height: 8),
+              RadioGroup<String>(
+                groupValue: _paymentMethod,
+                onChanged: (value) =>
+                    setState(() => _paymentMethod = value ?? 'demo'),
+                child: const Column(
+                  children: [
+                    RadioListTile<String>(
+                      value: 'demo',
+                      title: Text('Simulated card payment'),
+                      subtitle: Text(
+                        'Demo only. No card details are requested and no charge is made.',
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 12),
-                  _TotalRow(
-                    label: 'Estimated total before delivery',
-                    value: formatNaira(widget.controller.cart.total),
-                  ),
-                  const SizedBox(height: 16),
-                  if (widget.controller.error != null)
-                    Text(widget.controller.error!,
-                        style: const TextStyle(color: Color(0xffa52e24))),
-                  FilledButton(
-                    onPressed: widget.controller.busy ? null : _submit,
-                    child: widget.controller.busy
-                        ? const SizedBox(
-                            width: 18,
-                            height: 18,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : const Text('Place demo order'),
-                  ),
-                ],
+                    RadioListTile<String>(
+                      value: 'pay_on_delivery',
+                      title: Text('Pay on delivery'),
+                      subtitle: Text(
+                        'Demo order status only; payment is not processed.',
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
+              const Card(
+                child: Padding(
+                  padding: EdgeInsets.all(14),
+                  child: Text(
+                    'Payment demo: this marketplace does not accept payment credentials or process real payments. A production release must use a server-verified payment provider.',
+                    style: TextStyle(fontSize: 12, height: 1.5),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              _TotalRow(
+                label: 'Estimated total before delivery',
+                value: formatNaira(widget.controller.cart.total),
+              ),
+              const SizedBox(height: 16),
+              if (widget.controller.error != null)
+                Text(
+                  widget.controller.error!,
+                  style: const TextStyle(color: Color(0xffa52e24)),
+                ),
+              FilledButton(
+                onPressed: widget.controller.busy ? null : _submit,
+                child: widget.controller.busy
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Text('Place demo order'),
+              ),
+            ],
           ),
         ),
-      );
+      ),
+    ),
+  );
 }
 
 class _TotalRow extends StatelessWidget {
@@ -285,12 +317,18 @@ class _TotalRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(child: Text(label, style: const TextStyle(fontWeight: FontWeight.w600))),
-          Text(value,
-              style: const TextStyle(
-                  color: Color(0xff12483b), fontWeight: FontWeight.w800)),
-        ],
-      );
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Expanded(
+        child: Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
+      ),
+      Text(
+        value,
+        style: const TextStyle(
+          color: Color(0xff12483b),
+          fontWeight: FontWeight.w800,
+        ),
+      ),
+    ],
+  );
 }

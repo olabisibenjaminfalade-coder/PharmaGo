@@ -17,15 +17,13 @@ void main() {
   setUp(() async {
     database = sqlite3.openInMemory();
     client = HttpClient();
-    final api = MarketplaceApi(
+    final api = MarketplaceApi.forTesting(
       database: database,
       jwtSecret: jwtSecret,
       allowedOrigins: allowedOrigins,
     );
     server = await shelf_io.serve(
-      const Pipeline()
-          .addMiddleware(api.corsMiddleware)
-          .addHandler(api.router),
+      const Pipeline().addMiddleware(api.corsMiddleware).addHandler(api.router),
       InternetAddress.loopbackIPv4,
       0,
     );
@@ -37,7 +35,8 @@ void main() {
     database.dispose();
   });
 
-  test('buyer registration, stock validation, checkout and replay are safe', () async {
+  test('buyer registration, stock validation, checkout and replay are safe',
+      () async {
     final weakRegistration = await _send(
       client,
       server,
@@ -138,8 +137,8 @@ void main() {
     expect(checkoutOrder['paymentStatus'], 'not_paid_demo');
     expect(checkoutOrder['total'], 17000);
     expect(
-      database.select('SELECT stock FROM products WHERE id = ?', ['multi'])
-          .first['stock'],
+      database.select(
+          'SELECT stock FROM products WHERE id = ?', ['multi']).first['stock'],
       18,
     );
 
@@ -159,7 +158,7 @@ void main() {
     expect((_json(retry)['order'] as Map<String, dynamic>)['id'],
         checkoutOrder['id']);
 
-    MarketplaceApi(
+    await MarketplaceApi.forTesting(
       database: database,
       jwtSecret: jwtSecret,
       allowedOrigins: allowedOrigins,
@@ -178,7 +177,12 @@ void main() {
       },
     );
     final adminToken = _json(adminLogin)['token'] as String;
-    for (final status in ['confirmed', 'packed', 'out_for_delivery', 'delivered']) {
+    for (final status in [
+      'confirmed',
+      'packed',
+      'out_for_delivery',
+      'delivered'
+    ]) {
       final update = await _send(
         client,
         server,
@@ -251,7 +255,7 @@ void main() {
       token: token,
     );
     expect(revokedSession.statusCode, 401);
-  });
+  }, timeout: const Timeout(Duration(minutes: 3)));
 
   test('seller listing requires administrator approval and is ownership scoped',
       () async {
@@ -301,12 +305,12 @@ void main() {
     );
     expect(pendingCreate.statusCode, 403);
 
-    final api = MarketplaceApi(
+    final api = MarketplaceApi.forTesting(
       database: database,
       jwtSecret: jwtSecret,
       allowedOrigins: allowedOrigins,
     );
-    api.bootstrapAdministrator(
+    await api.bootstrapAdministrator(
       'admin@example.test',
       'a-correct-horse-battery-staple',
     );
@@ -328,8 +332,8 @@ void main() {
       '/admin/vendors',
       token: adminToken,
     );
-    final pendingVendor =
-        (_json(vendors)['vendors'] as List<dynamic>).single as Map<String, dynamic>;
+    final pendingVendor = (_json(vendors)['vendors'] as List<dynamic>).single
+        as Map<String, dynamic>;
     final approval = await _send(
       client,
       server,
@@ -381,7 +385,8 @@ void main() {
       'GET',
       '/admin/vendors',
       token: adminToken,
-    ))['vendors'] as List<dynamic>).single as Map<String, dynamic>;
+    ))['vendors'] as List<dynamic>)
+        .single as Map<String, dynamic>;
     final secondApproval = await _send(
       client,
       server,
@@ -442,7 +447,7 @@ void main() {
     );
     expect(listing.statusCode, 200);
     expect((_json(listing)['products'] as List<dynamic>).length, 1);
-  });
+  }, timeout: const Timeout(Duration(minutes: 3)));
 
   test('browser origins are restricted to explicit allowlist', () async {
     final allowed = await _send(
@@ -469,7 +474,8 @@ void main() {
       headers: {
         'origin': 'http://localhost:5000',
         'access-control-request-method': 'POST',
-        'access-control-request-headers': 'authorization, content-type, idempotency-key',
+        'access-control-request-headers':
+            'authorization, content-type, idempotency-key',
       },
     );
     expect(preflight.statusCode, 204);
@@ -489,10 +495,13 @@ Future<HttpResponseData> _send(
   Map<String, String> headers = const {},
   String? token,
 }) async {
-  final request = await client.openUrl(method, Uri.parse('http://127.0.0.1:${server.port}$path'));
+  final request = await client.openUrl(
+      method, Uri.parse('http://127.0.0.1:${server.port}$path'));
   request.headers.set(HttpHeaders.acceptHeader, 'application/json');
   if (body != null) request.headers.contentType = ContentType.json;
-  if (token != null) request.headers.set(HttpHeaders.authorizationHeader, 'Bearer $token');
+  if (token != null) {
+    request.headers.set(HttpHeaders.authorizationHeader, 'Bearer $token');
+  }
   headers.forEach(request.headers.set);
   if (body != null) request.write(jsonEncode(body));
   final response = await request.close();

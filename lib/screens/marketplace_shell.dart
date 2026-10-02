@@ -42,12 +42,6 @@ class _MarketplaceShellState extends State<MarketplaceShell> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    widget.controller.refresh();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final destinations = _destinations;
     final index = _selectedIndex.clamp(0, destinations.length - 1);
@@ -62,11 +56,14 @@ class _MarketplaceShellState extends State<MarketplaceShell> {
             Image.asset(
               'gom.png',
               height: 33,
-              errorBuilder: (_, __, ___) =>
+              errorBuilder: (_, _, _) =>
                   const Icon(Icons.local_pharmacy_outlined, size: 27),
             ),
             const SizedBox(width: 9),
-            const Text('PharmaGo', style: TextStyle(fontWeight: FontWeight.w800)),
+            const Text(
+              'PharmaGo',
+              style: TextStyle(fontWeight: FontWeight.w800),
+            ),
           ],
         ),
         actions: [
@@ -75,7 +72,9 @@ class _MarketplaceShellState extends State<MarketplaceShell> {
               tooltip: 'Shopping cart',
               onPressed: () => setState(() => _selectedIndex = 1),
               icon: Badge(
-                label: Text('${widget.controller.cart.items.fold<int>(0, (sum, line) => sum + line.quantity)}'),
+                label: Text(
+                  '${widget.controller.cart.items.fold<int>(0, (sum, line) => sum + line.quantity)}',
+                ),
                 isLabelVisible: widget.controller.cart.items.isNotEmpty,
                 child: const Icon(Icons.shopping_bag_outlined),
               ),
@@ -91,7 +90,9 @@ class _MarketplaceShellState extends State<MarketplaceShell> {
           ),
           IconButton(
             tooltip: 'Sign out',
-            onPressed: widget.controller.busy ? null : widget.controller.signOut,
+            onPressed: widget.controller.busy
+                ? null
+                : widget.controller.signOut,
             icon: const Icon(Icons.logout),
           ),
           const SizedBox(width: 10),
@@ -120,10 +121,12 @@ class _MarketplaceShellState extends State<MarketplaceShell> {
                             setState(() => _selectedIndex = value),
                         labelType: NavigationRailLabelType.all,
                         destinations: destinations
-                            .map((item) => NavigationRailDestination(
-                                  icon: Icon(item.icon),
-                                  label: Text(item.label),
-                                ))
+                            .map(
+                              (item) => NavigationRailDestination(
+                                icon: Icon(item.icon),
+                                label: Text(item.label),
+                              ),
+                            )
                             .toList(),
                       ),
                       const VerticalDivider(width: 1),
@@ -141,10 +144,12 @@ class _MarketplaceShellState extends State<MarketplaceShell> {
               onDestinationSelected: (value) =>
                   setState(() => _selectedIndex = value),
               destinations: destinations
-                  .map((item) => NavigationDestination(
-                        icon: Icon(item.icon),
-                        label: item.label,
-                      ))
+                  .map(
+                    (item) => NavigationDestination(
+                      icon: Icon(item.icon),
+                      label: item.label,
+                    ),
+                  )
                   .toList(),
             ),
     );
@@ -158,10 +163,7 @@ class _MarketplaceShellState extends State<MarketplaceShell> {
           : SellerOrdersScreen(controller: widget.controller);
     }
     if (widget.controller.isAdmin) {
-      return AdminScreen(
-        controller: widget.controller,
-        showReport: index == 2,
-      );
+      return AdminScreen(controller: widget.controller, showReport: index == 2);
     }
     return index == 1
         ? CartScreen(controller: widget.controller)

@@ -20,14 +20,15 @@ class ApiClient {
     String? baseUrl,
     http.Client? httpClient,
     FlutterSecureStorage? secureStorage,
-  })  : baseUrl = (baseUrl ??
-            const String.fromEnvironment(
-              'PHARMAGO_API_URL',
-              defaultValue: 'http://127.0.0.1:8080',
-            ))
-            .replaceAll(RegExp(r'/$'), ''),
-        _http = httpClient ?? http.Client(),
-        _storage = secureStorage ?? const FlutterSecureStorage();
+  }) : baseUrl =
+           (baseUrl ??
+                   const String.fromEnvironment(
+                     'PHARMAGO_API_URL',
+                     defaultValue: 'http://127.0.0.1:8080',
+                   ))
+               .replaceAll(RegExp(r'/$'), ''),
+       _http = httpClient ?? http.Client(),
+       _storage = secureStorage ?? const FlutterSecureStorage();
 
   final String baseUrl;
   final http.Client _http;
@@ -53,6 +54,7 @@ class ApiClient {
         'password': password,
         'role': role,
       },
+      authenticated: false,
     );
   }
 
@@ -66,7 +68,9 @@ class ApiClient {
     final token = response['token'];
     final user = response['user'];
     if (token is! String || user is! Map<String, dynamic>) {
-      throw const ApiException('The server returned an invalid sign-in response.');
+      throw const ApiException(
+        'The server returned an invalid sign-in response.',
+      );
     }
     await _storage.write(key: _tokenKey, value: token);
     return MarketplaceUser.fromJson(user);
@@ -89,13 +93,17 @@ class ApiClient {
     String query = '',
     String? category,
   }) async {
-    final uri = Uri.parse('$baseUrl/products').replace(queryParameters: {
-      if (query.trim().isNotEmpty) 'q': query.trim(),
-      if (category != null && category.isNotEmpty) 'category': category,
-    });
+    final uri = Uri.parse('$baseUrl/products').replace(
+      queryParameters: {
+        if (query.trim().isNotEmpty) 'q': query.trim(),
+        if (category != null && category.isNotEmpty) 'category': category,
+      },
+    );
     final response = await _requestUri('GET', uri);
     return (response['products'] as List<dynamic>)
-        .map((item) => MarketplaceProduct.fromJson(item as Map<String, dynamic>))
+        .map(
+          (item) => MarketplaceProduct.fromJson(item as Map<String, dynamic>),
+        )
         .toList();
   }
 
@@ -132,9 +140,7 @@ class ApiClient {
         'paymentMethod': paymentMethod,
       },
     );
-    return MarketplaceOrder.fromJson(
-      response['order'] as Map<String, dynamic>,
-    );
+    return MarketplaceOrder.fromJson(response['order'] as Map<String, dynamic>);
   }
 
   Future<List<MarketplaceOrder>> listOrders({bool seller = false}) async {
@@ -158,7 +164,9 @@ class ApiClient {
   Future<List<MarketplaceProduct>> listSellerProducts() async {
     final response = await _request('GET', '/seller/products');
     return (response['products'] as List<dynamic>)
-        .map((item) => MarketplaceProduct.fromJson(item as Map<String, dynamic>))
+        .map(
+          (item) => MarketplaceProduct.fromJson(item as Map<String, dynamic>),
+        )
         .toList();
   }
 
@@ -246,9 +254,13 @@ class ApiClient {
     Map<String, Object?>? body,
     Map<String, String>? headers,
     bool authenticated = true,
-  }) =>
-      _requestUri(method, Uri.parse('$baseUrl$path'),
-          body: body, extraHeaders: headers, authenticated: authenticated);
+  }) => _requestUri(
+    method,
+    Uri.parse('$baseUrl$path'),
+    body: body,
+    extraHeaders: headers,
+    authenticated: authenticated,
+  );
 
   Future<Map<String, dynamic>> _requestUri(
     String method,
@@ -266,8 +278,7 @@ class ApiClient {
       headers['authorization'] = 'Bearer $token';
     }
     try {
-      final request = http.Request(method, uri)
-        ..headers.addAll(headers);
+      final request = http.Request(method, uri)..headers.addAll(headers);
       if (body != null) request.body = jsonEncode(body);
       final streamed = await _http.send(request);
       final response = await http.Response.fromStream(streamed);

@@ -13,7 +13,8 @@ class MarketplaceUser {
   final String role;
   final String? vendorId;
 
-  factory MarketplaceUser.fromJson(Map<String, dynamic> json) => MarketplaceUser(
+  factory MarketplaceUser.fromJson(Map<String, dynamic> json) =>
+      MarketplaceUser(
         id: json['id'] as String,
         email: json['email'] as String,
         fullName: json['fullName'] as String,
@@ -65,37 +66,34 @@ class MarketplaceProduct {
       );
 
   Map<String, Object> toJson() => {
-        'name': name,
-        'category': category,
-        'note': note,
-        'size': size,
-        'price': price,
-        'stock': stock,
-        'image': image,
-        'description': description,
-        'tag': tag,
-      };
+    'name': name,
+    'category': category,
+    'note': note,
+    'size': size,
+    'price': price,
+    'stock': stock,
+    'image': image,
+    'description': description,
+    'tag': tag,
+  };
 }
 
 class CartLine {
-  const CartLine({
-    required this.product,
-    required this.quantity,
-  });
+  const CartLine({required this.product, required this.quantity});
 
   final MarketplaceProduct product;
   final int quantity;
 
   factory CartLine.fromJson(Map<String, dynamic> json) => CartLine(
-        product: MarketplaceProduct.fromJson({
-          ...json,
-          'description': json['description'] ?? '',
-          'note': json['note'] ?? '',
-          'seller': json['seller'] ?? '',
-          'tag': json['tag'] ?? '',
-        }),
-        quantity: json['quantity'] as int,
-      );
+    product: MarketplaceProduct.fromJson({
+      ...json,
+      'description': json['description'] ?? '',
+      'note': json['note'] ?? '',
+      'seller': json['seller'] ?? '',
+      'tag': json['tag'] ?? '',
+    }),
+    quantity: json['quantity'] as int,
+  );
 }
 
 class MarketplaceOrderItem {
@@ -154,7 +152,10 @@ class MarketplaceOrder {
         deliveryAddress: json['deliveryAddress'] as String? ?? '',
         sellerStatus: json['sellerStatus'] as String?,
         items: (json['items'] as List<dynamic>? ?? const [])
-            .map((item) => MarketplaceOrderItem.fromJson(item as Map<String, dynamic>))
+            .map(
+              (item) =>
+                  MarketplaceOrderItem.fromJson(item as Map<String, dynamic>),
+            )
             .toList(),
       );
 }
@@ -166,9 +167,9 @@ class CartSnapshot {
   final int total;
 
   factory CartSnapshot.fromJson(Map<String, dynamic> json) => CartSnapshot(
-        items: (json['items'] as List<dynamic>? ?? const [])
-            .map((item) => CartLine.fromJson(item as Map<String, dynamic>))
-            .toList(),
-        total: json['total'] as int? ?? 0,
-      );
+    items: (json['items'] as List<dynamic>? ?? const [])
+        .map((item) => CartLine.fromJson(item as Map<String, dynamic>))
+        .toList(),
+    total: json['total'] as int? ?? 0,
+  );
 }

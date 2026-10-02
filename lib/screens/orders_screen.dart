@@ -11,10 +11,10 @@ class BuyerOrdersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => _OrdersList(
-        orders: controller.orders,
-        emptyMessage: 'Your orders will appear here after checkout.',
-        seller: false,
-      );
+    orders: controller.orders,
+    emptyMessage: 'Your orders will appear here after checkout.',
+    seller: false,
+  );
 }
 
 class SellerOrdersScreen extends StatelessWidget {
@@ -24,11 +24,11 @@ class SellerOrdersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => _OrdersList(
-        orders: controller.orders,
-        emptyMessage: 'There are no orders to fulfil yet.',
-        seller: true,
-        onStatusChange: controller.updateOrderStatus,
-      );
+    orders: controller.orders,
+    emptyMessage: 'There are no orders to fulfil yet.',
+    seller: true,
+    onStatusChange: controller.updateOrderStatus,
+  );
 }
 
 class _OrdersList extends StatelessWidget {
@@ -52,8 +52,10 @@ class _OrdersList extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(20),
       children: [
-        Text(seller ? 'Fulfilment queue' : 'Your orders',
-            style: Theme.of(context).textTheme.headlineSmall),
+        Text(
+          seller ? 'Fulfilment queue' : 'Your orders',
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
         const SizedBox(height: 12),
         for (final order in orders)
           Card(
@@ -68,28 +70,43 @@ class _OrdersList extends StatelessWidget {
                     spacing: 12,
                     runSpacing: 8,
                     children: [
-                      Text('Order ${order.id.substring(0, order.id.length < 8 ? order.id.length : 8)}',
-                          style: const TextStyle(fontWeight: FontWeight.w800)),
-                      Chip(label: Text(seller
-                          ? order.sellerStatus ?? order.status
-                          : order.status)),
-                      Text(formatNaira(order.total),
-                          style: const TextStyle(
-                              color: Color(0xff12483b),
-                              fontWeight: FontWeight.w800)),
+                      Text(
+                        'Order ${order.id.substring(0, order.id.length < 8 ? order.id.length : 8)}',
+                        style: const TextStyle(fontWeight: FontWeight.w800),
+                      ),
+                      Chip(
+                        label: Text(
+                          seller
+                              ? order.sellerStatus ?? order.status
+                              : order.status,
+                        ),
+                      ),
+                      Text(
+                        formatNaira(order.total),
+                        style: const TextStyle(
+                          color: Color(0xff12483b),
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
                     ],
                   ),
                   if (order.createdAt.isNotEmpty)
-                    Text(order.createdAt,
-                        style: const TextStyle(
-                            color: Color(0xff707b76), fontSize: 10)),
+                    Text(
+                      order.createdAt,
+                      style: const TextStyle(
+                        color: Color(0xff707b76),
+                        fontSize: 10,
+                      ),
+                    ),
                   const Divider(height: 22),
                   for (final item in order.items)
                     Padding(
                       padding: const EdgeInsets.only(bottom: 7),
                       child: Row(
                         children: [
-                          Expanded(child: Text('${item.name} × ${item.quantity}')),
+                          Expanded(
+                            child: Text('${item.name} × ${item.quantity}'),
+                          ),
                           Text(formatNaira(item.unitPrice * item.quantity)),
                         ],
                       ),
@@ -97,19 +114,28 @@ class _OrdersList extends StatelessWidget {
                   if (!seller && order.deliveryAddress.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.only(top: 7),
-                      child: Text('Delivery: ${order.deliveryAddress}',
-                          style: const TextStyle(fontSize: 11)),
+                      child: Text(
+                        'Delivery: ${order.deliveryAddress}',
+                        style: const TextStyle(fontSize: 11),
+                      ),
                     ),
                   if (!seller)
                     const Padding(
                       padding: EdgeInsets.only(top: 8),
-                      child: Text('Payment status: not paid (demo)',
-                          style: TextStyle(
-                              color: Color(0xff707b76), fontSize: 11)),
+                      child: Text(
+                        'Payment status: not paid (demo)',
+                        style: TextStyle(
+                          color: Color(0xff707b76),
+                          fontSize: 11,
+                        ),
+                      ),
                     ),
                   if (seller) ...[
                     const SizedBox(height: 10),
-                    _StatusAction(order: order, onStatusChange: onStatusChange!),
+                    _StatusAction(
+                      order: order,
+                      onStatusChange: onStatusChange!,
+                    ),
                   ],
                 ],
               ),

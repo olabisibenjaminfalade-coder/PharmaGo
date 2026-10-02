@@ -19,8 +19,10 @@ class AdminScreen extends StatelessWidget {
       return ListView(
         padding: const EdgeInsets.all(22),
         children: [
-          Text('Marketplace report',
-              style: Theme.of(context).textTheme.headlineSmall),
+          Text(
+            'Marketplace report',
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
           const SizedBox(height: 14),
           _ReportTile(
             label: 'Active listings',
@@ -46,7 +48,11 @@ class AdminScreen extends StatelessWidget {
           const SizedBox(height: 14),
           const Text(
             'Reports are operational summaries only; review database access and privacy policy before exporting personal data.',
-            style: TextStyle(color: Color(0xff707b76), fontSize: 11, height: 1.5),
+            style: TextStyle(
+              color: Color(0xff707b76),
+              fontSize: 11,
+              height: 1.5,
+            ),
           ),
         ],
       );
@@ -56,11 +62,15 @@ class AdminScreen extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(22),
       children: [
-        Text('Marketplace administration',
-            style: Theme.of(context).textTheme.headlineSmall),
+        Text(
+          'Marketplace administration',
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
         const SizedBox(height: 12),
-        Text('Seller applications',
-            style: Theme.of(context).textTheme.titleMedium),
+        Text(
+          'Seller applications',
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
         const SizedBox(height: 8),
         if (vendors.isEmpty)
           const Card(
@@ -73,10 +83,12 @@ class AdminScreen extends StatelessWidget {
           Card(
             child: ListTile(
               leading: const CircleAvatar(
-                  child: Icon(Icons.storefront_outlined)),
+                child: Icon(Icons.storefront_outlined),
+              ),
               title: Text(vendor['name'] as String? ?? 'Seller'),
               subtitle: Text(
-                  '${vendor['fullName'] ?? ''} · ${vendor['email'] ?? ''}'),
+                '${vendor['fullName'] ?? ''} · ${vendor['email'] ?? ''}',
+              ),
               trailing: FilledButton(
                 onPressed: controller.busy
                     ? null
@@ -86,29 +98,34 @@ class AdminScreen extends StatelessWidget {
             ),
           ),
         const SizedBox(height: 18),
-        Text('Product moderation',
-            style: Theme.of(context).textTheme.titleMedium),
+        Text(
+          'Product moderation',
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
         for (final product in controller.adminProducts)
           Card(
             child: SwitchListTile(
               title: Text(product['name'] as String? ?? 'Product'),
               subtitle: Text(
-                  '${product['seller'] ?? ''} · ${product['category'] ?? ''} · ${product['active'] == true ? 'Visible' : 'Hidden'}'),
+                '${product['seller'] ?? ''} · ${product['category'] ?? ''} · ${product['active'] == true ? 'Visible' : 'Hidden'}',
+              ),
               value: product['active'] == true,
               onChanged: controller.busy
                   ? null
                   : (active) => controller.setProductActive(
-                        product['id'] as String,
-                        active,
-                      ),
+                      product['id'] as String,
+                      active,
+                    ),
             ),
           ),
         const SizedBox(height: 18),
         Row(
           children: [
             Expanded(
-              child: Text('Categories',
-                  style: Theme.of(context).textTheme.titleMedium),
+              child: Text(
+                'Categories',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
             ),
             TextButton.icon(
               onPressed: controller.busy
@@ -128,9 +145,9 @@ class AdminScreen extends StatelessWidget {
               onChanged: controller.busy
                   ? null
                   : (active) => controller.setCategoryActive(
-                        category['id'] as String,
-                        active,
-                      ),
+                      category['id'] as String,
+                      active,
+                    ),
             ),
           ),
         const SizedBox(height: 18),
@@ -138,17 +155,15 @@ class AdminScreen extends StatelessWidget {
         for (final user in controller.adminUsers)
           Card(
             child: SwitchListTile(
-              title: Text(user['fullName'] as String? ??
-                  user['email'] as String? ??
-                  ''),
+              title: Text(
+                user['fullName'] as String? ?? user['email'] as String? ?? '',
+              ),
               subtitle: Text('${user['role']} · ${user['email']}'),
               value: user['active'] == true,
               onChanged: user['id'] == controller.user?.id || controller.busy
                   ? null
-                  : (active) => controller.setUserActive(
-                        user['id'] as String,
-                        active,
-                      ),
+                  : (active) =>
+                        controller.setUserActive(user['id'] as String, active),
             ),
           ),
       ],
@@ -200,10 +215,10 @@ class _ReportTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-        child: ListTile(
-          leading: Icon(icon, color: const Color(0xff12483b)),
-          title: Text(label),
-          subtitle: Text(value.isEmpty ? 'No records yet' : value),
-        ),
-      );
+    child: ListTile(
+      leading: Icon(icon, color: const Color(0xff12483b)),
+      title: Text(label),
+      subtitle: Text(value.isEmpty ? 'No records yet' : value),
+    ),
+  );
 }

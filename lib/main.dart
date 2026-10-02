@@ -8,8 +8,11 @@ import 'state/marketplace_controller.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   final controller = MarketplaceController(ApiClient());
+  controller.busy = true;
   runApp(PharmaGoApp(controller: controller));
-  controller.restoreSession();
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    controller.restoreSession();
+  });
 }
 
 class PharmaGoApp extends StatelessWidget {
@@ -22,47 +25,47 @@ class PharmaGoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-        title: 'PharmaGo Marketplace',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: forest,
-            primary: forest,
-            surface: Colors.white,
-          ),
-          scaffoldBackgroundColor: paper,
-          useMaterial3: true,
-          appBarTheme: const AppBarTheme(
-            backgroundColor: Colors.white,
-            foregroundColor: forest,
-            elevation: 0,
-          ),
-          inputDecorationTheme: const InputDecorationTheme(
-            border: OutlineInputBorder(),
-            isDense: true,
-          ),
-          cardTheme: CardThemeData(
-            color: Colors.white,
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-              side: const BorderSide(color: Color(0xffe4e8e1)),
-            ),
-          ),
+    title: 'PharmaGo Marketplace',
+    debugShowCheckedModeBanner: false,
+    theme: ThemeData(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: forest,
+        primary: forest,
+        surface: Colors.white,
+      ),
+      scaffoldBackgroundColor: paper,
+      useMaterial3: true,
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.white,
+        foregroundColor: forest,
+        elevation: 0,
+      ),
+      inputDecorationTheme: const InputDecorationTheme(
+        border: OutlineInputBorder(),
+        isDense: true,
+      ),
+      cardTheme: CardThemeData(
+        color: Colors.white,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+          side: const BorderSide(color: Color(0xffe4e8e1)),
         ),
-        home: AnimatedBuilder(
-          animation: controller,
-          builder: (context, _) {
-            if (controller.busy && controller.user == null) {
-              return const Scaffold(
-                body: Center(child: CircularProgressIndicator()),
-              );
-            }
-            if (controller.user == null) {
-              return AuthScreen(controller: controller);
-            }
-            return MarketplaceShell(controller: controller);
-          },
-        ),
-      );
+      ),
+    ),
+    home: AnimatedBuilder(
+      animation: controller,
+      builder: (context, _) {
+        if (controller.busy && controller.user == null) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        if (controller.user == null) {
+          return AuthScreen(controller: controller);
+        }
+        return MarketplaceShell(controller: controller);
+      },
+    ),
+  );
 }

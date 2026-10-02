@@ -31,6 +31,7 @@ class MarketplaceController extends ChangeNotifier {
     try {
       if (await api.readToken() != null) {
         user = await api.currentUser();
+        await _loadMarketplace();
       }
     } on ApiException catch (exception) {
       error = exception.message;
@@ -44,7 +45,7 @@ class MarketplaceController extends ChangeNotifier {
   Future<void> signIn(String email, String password) async {
     await _run(() async {
       user = await api.signIn(email, password);
-      await refresh();
+      await _loadMarketplace();
     });
   }
 
@@ -54,12 +55,14 @@ class MarketplaceController extends ChangeNotifier {
     required String password,
     required String role,
   }) async {
-    await _run(() => api.register(
-          fullName: fullName,
-          email: email,
-          password: password,
-          role: role,
-        ));
+    await _run(
+      () => api.register(
+        fullName: fullName,
+        email: email,
+        password: password,
+        role: role,
+      ),
+    );
   }
 
   Future<void> signOut() async {
@@ -80,23 +83,7 @@ class MarketplaceController extends ChangeNotifier {
   }
 
   Future<void> refresh({String query = '', String? category}) async {
-    await _run(() async {
-      products = await api.listProducts(query: query, category: category);
-      categories = await api.listCategories();
-      if (user?.role == 'buyer') {
-        cart = await api.getCart();
-        orders = await api.listOrders();
-      } else if (isSeller) {
-        sellerProducts = await api.listSellerProducts();
-        orders = await api.listOrders(seller: true);
-      } else if (isAdmin) {
-        adminReport = await api.adminSummary();
-        pendingVendors = await api.pendingVendors();
-        adminProducts = await api.adminProducts();
-        adminCategories = await api.adminCategories();
-        adminUsers = await api.adminUsers();
-      }
-    });
+    await _run(() => _loadMarketplace(query: query, category: category));
   }
 
   Future<void> searchCatalog({String query = '', String? category}) async {
@@ -189,6 +176,24 @@ class MarketplaceController extends ChangeNotifier {
       await api.setUserActive(id, active);
       adminUsers = await api.adminUsers();
     });
+  }
+
+  Future<void> _loadMarketplace({String query = '', String? category}) async {
+    products = await api.listProducts(query: query, category: category);
+    categories = await api.listCategories();
+    if (user?.role == 'buyer') {
+      cart = await api.getCart();
+      orders = await api.listOrders();
+    } else if (isSeller) {
+      sellerProducts = await api.listSellerProducts();
+      orders = await api.listOrders(seller: true);
+    } else if (isAdmin) {
+      adminReport = await api.adminSummary();
+      pendingVendors = await api.pendingVendors();
+      adminProducts = await api.adminProducts();
+      adminCategories = await api.adminCategories();
+      adminUsers = await api.adminUsers();
+    }
   }
 
   Future<void> _run(Future<void> Function() action) async {

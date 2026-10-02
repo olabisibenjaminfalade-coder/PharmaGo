@@ -72,6 +72,10 @@ flutter build web --dart-define=PHARMAGO_API_URL=https://<your-api-host>
 
 Run desktop/mobile builds only after installing the matching platform toolchain. Check `flutter doctor` for missing host dependencies.
 
+### Verification status for this workspace
+
+The Flutter web build, Flutter widget test, Flutter analyzer, Dart backend integration tests and Dart backend analyzer have been run successfully. API test fixtures deliberately use `MarketplaceApi.forTesting` with a reduced password-hash work factor; the real API server keeps the 600,000-iteration PBKDF2-HMAC-SHA256 setting. The generated Android and Windows targets are not build-verified here because this machine has no Android SDK or Visual Studio C++ workload. iOS/macOS builds require macOS with Xcode; Linux desktop builds require a Linux host/toolchain.
+
 ## Configuration and security
 
 - `PHARMAGO_API_URL` is a compile-time client setting; it is public and must not contain a secret.
@@ -84,3 +88,7 @@ Run desktop/mobile builds only after installing the matching platform toolchain.
 ## Project report
 
 See [PROJECT_REPORT.md](./PROJECT_REPORT.md) for feasibility, fact-finding limitations, SRS, algorithms, flowcharts, pseudocode, data model, user manuals, test plan and evidence status. No stakeholder interview/questionnaire results are fabricated; those activities remain to be conducted and documented.
+
+## Demo screenshots
+
+The available local Flutter web captures are stored in [`screenshots/`](./screenshots/): blank sign-in, buyer catalogue, product details, cart, demo checkout and demo order confirmation. They use synthetic account and order data; checkout does not collect or process payment details. Registration, order-history, seller and administrator screenshots remain outstanding. See the screenshot evidence table in [PROJECT_REPORT.md](./PROJECT_REPORT.md#screenshot-evidence) for scope and limitations.

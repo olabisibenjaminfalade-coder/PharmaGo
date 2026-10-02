@@ -1,15 +1,12 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 
 import '../models/marketplace_models.dart';
 import '../state/marketplace_controller.dart';
 
-String formatNaira(int value) => 'N${value.toString().replaceAllMapped(
-      RegExp(r'(\d)(?=(\d{3})+$)'),
-      (match) => '${match[1]},',
-    )}';
+String formatNaira(int value) =>
+    'N${value.toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+$)'), (match) => '${match[1]},')}';
 
 class CatalogScreen extends StatefulWidget {
   const CatalogScreen({super.key, required this.controller});
@@ -42,10 +39,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
   void _searchProducts() {
     _searchTimer?.cancel();
     _searchTimer = Timer(const Duration(milliseconds: 250), () {
-      widget.controller.searchCatalog(
-        query: _search.text,
-        category: _category,
-      );
+      widget.controller.searchCatalog(query: _search.text, category: _category);
     });
   }
 
@@ -60,14 +54,22 @@ class _CatalogScreenState extends State<CatalogScreen> {
             runSpacing: 12,
             children: [
               Center(child: _ProductImage(product: product, height: 190)),
-              Text(product.category.toUpperCase(),
-                  style: const TextStyle(fontSize: 11, letterSpacing: 1)),
-              Text(product.name,
-                  style: Theme.of(context).textTheme.headlineSmall),
+              Text(
+                product.category.toUpperCase(),
+                style: const TextStyle(fontSize: 11, letterSpacing: 1),
+              ),
+              Text(
+                product.name,
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
               Text(product.note),
-              Text('${formatNaira(product.price)}  ·  ${product.size}',
-                  style: const TextStyle(
-                      color: Color(0xff12483b), fontWeight: FontWeight.w800)),
+              Text(
+                '${formatNaira(product.price)}  ·  ${product.size}',
+                style: const TextStyle(
+                  color: Color(0xff12483b),
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
               Text(product.description),
               Text('Seller: ${product.seller}'),
               Text('Available: ${product.stock}'),
@@ -98,17 +100,20 @@ class _CatalogScreenState extends State<CatalogScreen> {
   @override
   Widget build(BuildContext context) {
     final products = widget.controller.products;
-    final categories = products.map((product) => product.category).toSet().toList()..sort();
+    final categories =
+        products.map((product) => product.category).toSet().toList()..sort();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(22, 20, 22, 9),
-          child: Text('Shop pharmacy essentials',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    color: const Color(0xff0d382e),
-                    fontWeight: FontWeight.w700,
-                  )),
+          child: Text(
+            'Shop pharmacy essentials',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              color: const Color(0xff0d382e),
+              fontWeight: FontWeight.w700,
+            ),
+          ),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 22),
@@ -168,10 +173,10 @@ class _CatalogScreenState extends State<CatalogScreen> {
                     final columns = constraints.maxWidth >= 1100
                         ? 4
                         : constraints.maxWidth >= 690
-                            ? 3
-                            : constraints.maxWidth >= 430
-                                ? 2
-                                : 1;
+                        ? 3
+                        : constraints.maxWidth >= 430
+                        ? 2
+                        : 1;
                     return GridView.builder(
                       padding: const EdgeInsets.fromLTRB(18, 8, 18, 22),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -214,67 +219,83 @@ class _ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-        clipBehavior: Clip.antiAlias,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              child: InkWell(
-                onTap: onDetails,
-                child: ColoredBox(
-                  color: const Color(0xfff0f3ec),
-                  child: _ProductImage(product: product),
+    clipBehavior: Clip.antiAlias,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(
+          child: InkWell(
+            onTap: onDetails,
+            child: ColoredBox(
+              color: const Color(0xfff0f3ec),
+              child: _ProductImage(product: product),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(12, 10, 12, 11),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                product.category.toUpperCase(),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: Color(0xff707b76),
+                  fontSize: 9,
+                  letterSpacing: .6,
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 10, 12, 11),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              const SizedBox(height: 4),
+              Text(
+                product.name,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 7),
+              Row(
                 children: [
-                  Text(product.category.toUpperCase(),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                  Expanded(
+                    child: Text(
+                      formatNaira(product.price),
                       style: const TextStyle(
-                          color: Color(0xff707b76),
-                          fontSize: 9,
-                          letterSpacing: .6)),
-                  const SizedBox(height: 4),
-                  Text(product.name,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          fontSize: 13, fontWeight: FontWeight.w700)),
-                  const SizedBox(height: 7),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(formatNaira(product.price),
-                            style: const TextStyle(
-                                color: Color(0xff12483b),
-                                fontWeight: FontWeight.w800)),
+                        color: Color(0xff12483b),
+                        fontWeight: FontWeight.w800,
                       ),
-                      Text(product.size,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                              color: Color(0xff707b76), fontSize: 9)),
-                    ],
+                    ),
                   ),
-                  const SizedBox(height: 7),
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton(
-                      onPressed: product.stock > 0 ? onAdd : null,
-                      child: Text(product.stock > 0 ? 'Add to cart' : 'Out of stock'),
+                  Text(
+                    product.size,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Color(0xff707b76),
+                      fontSize: 9,
                     ),
                   ),
                 ],
               ),
-            ),
-          ],
+              const SizedBox(height: 7),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton(
+                  onPressed: product.stock > 0 ? onAdd : null,
+                  child: Text(
+                    product.stock > 0 ? 'Add to cart' : 'Out of stock',
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-      );
+      ],
+    ),
+  );
 }
 
 class _ProductImage extends StatelessWidget {
@@ -285,20 +306,20 @@ class _ProductImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Center(
-        child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: Image.asset(
-            product.image,
-            height: height,
-            fit: BoxFit.contain,
-            errorBuilder: (_, __, ___) => const Icon(
-              Icons.medication_outlined,
-              size: 65,
-              color: Color(0xff12483b),
-            ),
-          ),
+    child: Padding(
+      padding: const EdgeInsets.all(14),
+      child: Image.asset(
+        product.image,
+        height: height,
+        fit: BoxFit.contain,
+        errorBuilder: (_, _, _) => const Icon(
+          Icons.medication_outlined,
+          size: 65,
+          color: Color(0xff12483b),
         ),
-      );
+      ),
+    ),
+  );
 }
 
 class _CategoryChip extends StatelessWidget {
@@ -314,11 +335,11 @@ class _CategoryChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(right: 8),
-        child: ChoiceChip(
-          label: Text(label),
-          selected: selected,
-          onSelected: (_) => onTap(),
-        ),
-      );
+    padding: const EdgeInsets.only(right: 8),
+    child: ChoiceChip(
+      label: Text(label),
+      selected: selected,
+      onSelected: (_) => onTap(),
+    ),
+  );
 }

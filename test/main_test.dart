@@ -5,7 +5,9 @@ import 'package:pharmago/services/api_client.dart';
 import 'package:pharmago/state/marketplace_controller.dart';
 
 void main() {
-  testWidgets('sign-in and registration forms fit a narrow screen', (tester) async {
+  testWidgets('sign-in and registration forms fit a narrow screen', (
+    tester,
+  ) async {
     tester.view.physicalSize = const Size(360, 800);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);

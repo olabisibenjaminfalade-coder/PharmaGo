@@ -18,8 +18,10 @@ class SellerProductsScreen extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: Text('Your product listings',
-                  style: Theme.of(context).textTheme.headlineSmall),
+              child: Text(
+                'Your product listings',
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
             ),
             FilledButton.icon(
               onPressed: () => _editProduct(context, controller),
@@ -42,14 +44,17 @@ class SellerProductsScreen extends StatelessWidget {
               leading: SizedBox(
                 width: 45,
                 height: 45,
-                child: Image.asset(product.image,
-                    fit: BoxFit.contain,
-                    errorBuilder: (_, __, ___) =>
-                        const Icon(Icons.medication_outlined)),
+                child: Image.asset(
+                  product.image,
+                  fit: BoxFit.contain,
+                  errorBuilder: (_, _, _) =>
+                      const Icon(Icons.medication_outlined),
+                ),
               ),
               title: Text(product.name),
               subtitle: Text(
-                  '${product.category} · ${formatNaira(product.price)} · Stock ${product.stock}'),
+                '${product.category} · ${formatNaira(product.price)} · Stock ${product.stock}',
+              ),
               trailing: Wrap(
                 children: [
                   IconButton(
@@ -59,8 +64,12 @@ class SellerProductsScreen extends StatelessWidget {
                   ),
                   IconButton(
                     tooltip: 'Remove listing',
-                    onPressed: () => _removeProduct(context, controller, product),
-                    icon: const Icon(Icons.delete_outline, color: Color(0xffa52e24)),
+                    onPressed: () =>
+                        _removeProduct(context, controller, product),
+                    icon: const Icon(
+                      Icons.delete_outline,
+                      color: Color(0xffa52e24),
+                    ),
                   ),
                 ],
               ),
@@ -126,7 +135,8 @@ Future<void> _editProduct(
                       }
                       if ({'price', 'stock'}.contains(entry.key)) {
                         final number = int.tryParse(value);
-                        if (number == null || number < (entry.key == 'price' ? 1 : 0)) {
+                        if (number == null ||
+                            number < (entry.key == 'price' ? 1 : 0)) {
                           return entry.key == 'price'
                               ? 'Enter a whole-number price above zero.'
                               : 'Stock cannot be negative.';

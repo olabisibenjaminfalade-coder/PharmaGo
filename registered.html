@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#12483b">
+  <title>PharmaGo | Registration Complete</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --forest: #12483b;
+      --forest-deep: #0d382e;
+      --leaf: #c9ef62;
+      --paper: #f8f8f3;
+      --white: #fff;
+      --ink: #1c2925;
+      --muted: #707b76;
+      --line: #e4e8e1;
+      --serif: 'DM Serif Display', Georgia, 'Times New Roman', serif;
+      --sans: 'DM Sans', 'Segoe UI', sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      background: linear-gradient(135deg, #edf4eb 0%, #f8f8f3 46%, #f4efe7 100%);
+      color: var(--ink);
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    .announcement {
+      min-height: 34px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 7px 18px;
+      background: var(--forest);
+      color: white;
+      text-align: center;
+      font-size: 11px;
+      letter-spacing: .35px;
+    }
+    .announcement strong { color: var(--leaf); font-weight: 700; }
+    .site-header {
+      background: rgba(255,255,255,0.9);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(8px);
+    }
+    .shell { width: min(1180px, calc(100% - 48px)); margin: 0 auto; }
+    .header-main {
+      min-height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 23px;
+      font-weight: 800;
+      letter-spacing: -.7px;
+      color: var(--forest);
+    }
+    .brand-mark { width: auto; height: 40px; }
+    .text-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--white);
+      color: var(--forest);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .text-link svg { width: 16px; height: 16px; }
+    .page {
+      min-height: calc(100vh - 112px);
+      display: grid;
+      place-items: center;
+      padding: 52px 0 64px;
+    }
+    .card {
+      width: min(660px, 100%);
+      padding: 34px 28px 26px;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid rgba(18,72,59,0.08);
+      box-shadow: 0 24px 52px rgba(9, 26, 20, 0.08);
+      text-align: center;
+    }
+    .checkmark {
+      width: 82px;
+      height: 82px;
+      margin: 0 auto 18px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #eaf5de;
+      color: var(--forest);
+      font-size: 40px;
+      font-weight: 800;
+    }
+    h1 {
+      margin: 0;
+      font: 500 clamp(32px, 4vw, 46px)/1.05 var(--serif);
+      letter-spacing: -.6px;
+      color: var(--forest-deep);
+    }
+    p {
+      margin: 14px auto 0;
+      max-width: 520px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+    .primary-button,
+    .secondary-button {
+      min-height: 46px;
+      padding: 0 20px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .18s ease, background .2s ease;
+    }
+    .primary-button {
+      border: 0;
+      background: var(--forest);
+      color: white;
+    }
+    .primary-button:hover {
+      background: var(--forest-deep);
+      transform: translateY(-1px);
+    }
+    .secondary-button {
+      border: 1px solid var(--line);
+      background: white;
+      color: var(--forest);
+    }
+    .secondary-button:hover {
+      background: #f6f7f4;
+      transform: translateY(-1px);
+    }
+    @media (max-width: 560px) {
+      .card { padding: 28px 18px 22px; }
+      .actions { flex-direction: column; }
+      .primary-button, .secondary-button { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="announcement">Thoughtful care, right to your door. <strong>&nbsp; Free delivery on orders over N25,000</strong></div>
+
+  <header class="site-header">
+    <div class="shell header-main">
+      <a class="brand" href="index.html" aria-label="PharmaGo home">
+        <img class="brand-mark" src="gom.png" alt="PharmaGo logo">
+        <span>PharmaGo</span>
+      </a>
+      <a class="text-link" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M10 5l-7 7 7 7"/></svg>
+        <span>Back to home</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="card" aria-labelledby="registered-title">
+      <div class="checkmark" aria-hidden="true">✓</div>
+      <h1 id="registered-title">You’re registered!</h1>
+      <p>Your PharmaGo account is now active. You can continue shopping, manage prescriptions, and explore wellness essentials with ease.</p>
+
+      <div class="actions">
+        <a class="primary-button" href="index.html">Continue shopping</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#12483b">
+  <meta name="description" content="Product details from PharmaGo.">
+  <title>Product details | PharmaGo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme: light; --forest: #12483b; --forest-deep: #0d382e; --leaf: #c9ef62; --paper: #f8f8f3; --white: #fff; --ink: #1c2925; --muted: #707b76; --line: #e4e8e1; --sans: 'DM Sans', 'Segoe UI', sans-serif; --serif: 'DM Serif Display', Georgia, 'Times New Roman', serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    .announcement { min-height: 34px; display: flex; justify-content: center; align-items: center; padding: 7px 18px; background: var(--forest); color: white; text-align: center; font-size: 11px; letter-spacing: .35px; }
+    .announcement strong { color: var(--leaf); }
+    .shell { width: min(1180px, calc(100% - 48px)); margin: 0 auto; }
+    .site-header { background: var(--white); border-bottom: 1px solid var(--line); }
+    .header-main { min-height: 70px; display: flex; align-items: center; justify-content: space-between; }
+    .brand { display: inline-flex; align-items: center; gap: 9px; color: var(--forest); font-size: 22px; font-weight: 800; letter-spacing: -.7px; }
+    .brand-mark { width: auto; height: 40px; }
+    .back-link { color: var(--forest); font-size: 13px; font-weight: 700; }
+    main { padding-block: 46px 70px; }
+    .breadcrumb { margin: 0 0 24px; color: var(--muted); font-size: 12px; }
+    .breadcrumb a { color: var(--forest); font-weight: 700; }
+    .product-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(30px, 6vw, 76px); align-items: center; padding: clamp(24px, 5vw, 58px); background: var(--white); border: 1px solid var(--line); }
+    .product-visual { min-height: 390px; display: grid; place-items: center; overflow: hidden; background: var(--wash); }
+    .product-image { width: min(76%, 310px); height: 330px; object-fit: contain; border-radius: 8px; background: #fffef9; box-shadow: 10px 15px 25px #23402a17; }
+    .product-category { margin: 0 0 10px; color: var(--muted); font-size: 11px; font-weight: 800; letter-spacing: .8px; text-transform: uppercase; }
+    h1 { margin: 0; color: var(--forest-deep); font: 500 clamp(32px, 4.5vw, 49px)/1.1 var(--serif); }
+    .product-note { margin: 12px 0 0; color: #617067; font-size: 15px; }
+    .product-price { display: block; margin-top: 23px; color: var(--forest); font-size: 23px; font-weight: 800; }
+    .product-size { margin: 6px 0 22px; color: var(--muted); font-size: 13px; }
+    .description { max-width: 490px; color: #4f5d56; font-size: 14px; line-height: 1.75; }
+    .primary-button { min-height: 48px; display: inline-flex; justify-content: center; align-items: center; gap: 9px; padding: 0 24px; border: 0; border-radius: 3px; background: var(--forest); color: white; cursor: pointer; font-size: 13px; font-weight: 700; }
+    .primary-button:hover { background: var(--forest-deep); }
+    .notice { min-height: 20px; margin: 13px 0 0; color: var(--forest); font-size: 12px; font-weight: 700; }
+    .care-note { max-width: 520px; margin-top: 26px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; line-height: 1.6; }
+    .not-found { padding: 65px 20px; text-align: center; background: white; }
+    .not-found h1 { font-size: 36px; }
+    .not-found p { color: var(--muted); }
+    @media (max-width: 700px) {
+      .shell { width: calc(100% - 32px); }
+      .brand { font-size: 19px; }
+      .brand-mark { height: 34px; }
+      .back-link { font-size: 12px; }
+      main { padding-block: 28px 48px; }
+      .product-layout { grid-template-columns: 1fr; gap: 28px; padding: 18px; }
+      .product-visual { min-height: 280px; }
+      .product-image { height: 245px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="announcement">Thoughtful care, right to your door. <strong>&nbsp; Free delivery on orders over N25,000</strong></div>
+  <header class="site-header">
+    <div class="shell header-main">
+      <a class="brand" href="index.html" aria-label="PharmaGo home"><img class="brand-mark" src="gom.png" alt=""><span>PharmaGo</span></a>
+      <a class="back-link" href="index.html#shop">Back to shop</a>
+    </div>
+  </header>
+  <main class="shell">
+    <p class="breadcrumb"><a href="index.html">Home</a> / <a href="index.html#shop">Shop</a> / <span id="breadcrumb-name">Product details</span></p>
+    <section id="product-content" aria-live="polite"></section>
+  </main>
+  <script src="products.js"></script>
+  <script>
+    const product = products.find(item => item.id === new URLSearchParams(window.location.search).get('id'));
+    const content = document.getElementById('product-content');
+    const breadcrumbName = document.getElementById('breadcrumb-name');
+
+    function safeText(value) {
+      return String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
+    }
+    function formatPrice(amount) {
+      return 'N' + amount.toLocaleString('en-NG');
+    }
+
+    if (!product) {
+      document.title = 'Product not found | PharmaGo';
+      content.innerHTML = '<div class="not-found"><h1>Product not found</h1><p>We could not find that item in our shop.</p><a class="primary-button" href="index.html#shop">Return to the shop</a></div>';
+    } else {
+      document.title = `${product.name} | PharmaGo`;
+      breadcrumbName.textContent = product.name;
+      content.innerHTML = `
+        <article class="product-layout">
+          <div class="product-visual" style="--wash:${product.wash}">
+            <img class="product-image" src="${safeText(product.image)}" alt="${safeText(product.name)}">
+          </div>
+          <div class="product-info">
+            <p class="product-category">${safeText(product.category)}</p>
+            <h1>${safeText(product.name)}</h1>
+            <p class="product-note">${safeText(product.note)}</p>
+            <strong class="product-price">${formatPrice(product.price)}</strong>
+            <p class="product-size">Pack size: ${safeText(product.size)}</p>
+            <p class="description">${safeText(product.description)}</p>
+            <button class="primary-button" id="add-to-cart" type="button">Add to cart</button>
+            <p class="notice" id="cart-notice" role="status" aria-live="polite"></p>
+            <p class="care-note">Product information is a general description, not medical advice. Always read the product label and ask a pharmacist if you have questions about suitability or use.</p>
+          </div>
+        </article>`;
+      document.getElementById('add-to-cart').addEventListener('click', () => {
+        let cart;
+        try {
+          cart = JSON.parse(localStorage.getItem('pharmago-cart') || '{}');
+          if (!cart || typeof cart !== 'object' || Array.isArray(cart)) cart = {};
+          cart[product.id] = (Number(cart[product.id]) || 0) + 1;
+          localStorage.setItem('pharmago-cart', JSON.stringify(cart));
+          document.getElementById('cart-notice').textContent = 'Added to your cart.';
+        } catch {
+          document.getElementById('cart-notice').textContent = 'Your browser could not save this item. Please try again.';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

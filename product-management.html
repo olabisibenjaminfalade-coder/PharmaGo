@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#12483b">
+  <meta name="description" content="Manage the PharmaGo product catalog on this device.">
+  <title>Product management | PharmaGo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+      --forest: #12483b;
+      --forest-deep: #0d382e;
+      --leaf: #c9ef62;
+      --paper: #f8f8f3;
+      --white: #fff;
+      --ink: #1c2925;
+      --muted: #707b76;
+      --line: #e4e8e1;
+      --coral: #e7785f;
+      --sans: 'DM Sans', 'Segoe UI', sans-serif;
+      --serif: 'DM Serif Display', Georgia, 'Times New Roman', serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); }
+    a { color: inherit; text-decoration: none; }
+    button, input, textarea { font: inherit; }
+    .announcement { min-height: 34px; display: flex; justify-content: center; align-items: center; padding: 7px 18px; background: var(--forest); color: white; text-align: center; font-size: 11px; letter-spacing: .35px; }
+    .announcement strong { color: var(--leaf); }
+    .header { background: var(--white); border-bottom: 1px solid var(--line); }
+    .header-inner { width: min(1220px, calc(100% - 48px)); min-height: 72px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+    .brand { display: inline-flex; align-items: center; gap: 9px; color: var(--forest); font-size: 22px; font-weight: 800; letter-spacing: -.7px; }
+    .brand img { height: 38px; width: auto; }
+    .back-link { color: var(--forest); font-size: 12px; font-weight: 700; }
+    main { width: min(1220px, calc(100% - 48px)); margin: 0 auto; padding: 34px 0 70px; }
+    .page-heading { display: flex; justify-content: space-between; align-items: end; gap: 20px; margin-bottom: 20px; }
+    .kicker { margin: 0 0 6px; color: var(--muted); font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+    h1 { margin: 0; color: var(--forest-deep); font: 500 34px/1.1 var(--serif); }
+    .page-heading p:last-child { margin: 7px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .local-warning { margin-bottom: 22px; padding: 13px 15px; border-left: 3px solid #d5a437; background: #fff8e8; color: #64552f; font-size: 12px; line-height: 1.55; }
+    .manager-layout { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(310px, .7fr); gap: 23px; align-items: start; }
+    .catalog-panel, .editor-panel { background: white; border: 1px solid var(--line); }
+    .panel-head { min-height: 65px; display: flex; justify-content: space-between; align-items: center; gap: 15px; padding: 13px 17px; border-bottom: 1px solid var(--line); }
+    .panel-head h2 { margin: 0; color: var(--forest-deep); font-size: 14px; }
+    .count { color: var(--muted); font-size: 11px; }
+    .search { width: 190px; min-height: 37px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 3px; outline: none; font-size: 12px; }
+    .search:focus, .field input:focus, .field textarea:focus { border-color: var(--forest); box-shadow: 0 0 0 3px #12483b16; }
+    .product-list { display: grid; }
+    .product-row { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; align-items: center; gap: 13px; padding: 13px 16px; border-bottom: 1px solid #eef0ec; }
+    .product-row:last-child { border-bottom: 0; }
+    .product-image-wrap { width: 56px; height: 59px; display: grid; place-items: center; overflow: hidden; background: var(--wash); }
+    .product-image { width: 46px; height: 50px; object-fit: contain; border-radius: 3px; background: #fffef9; }
+    .product-row h3 { margin: 0 0 4px; font-size: 12px; }
+    .product-meta { display: flex; flex-wrap: wrap; gap: 5px 10px; color: var(--muted); font-size: 10px; }
+    .product-meta strong { color: var(--forest); }
+    .row-actions { display: flex; align-items: center; gap: 7px; }
+    .small-button { min-height: 31px; padding: 0 10px; border: 1px solid var(--line); border-radius: 3px; background: white; color: var(--forest); cursor: pointer; font-size: 10px; font-weight: 700; }
+    .small-button:hover { border-color: var(--forest); }
+    .small-button.delete { color: #a52e24; }
+    .small-button.delete:hover { border-color: #a52e24; }
+    .editor-panel { position: sticky; top: 15px; }
+    .editor-content { padding: 18px; }
+    .editor-content h2 { margin: 0; color: var(--forest-deep); font-size: 15px; }
+    .editor-hint { margin: 6px 0 17px; color: var(--muted); font-size: 11px; line-height: 1.5; }
+    .editor-form { display: grid; gap: 12px; }
+    .field { display: grid; gap: 5px; color: #46524c; font-size: 10px; font-weight: 700; }
+    .field input, .field textarea { width: 100%; min-height: 39px; padding: 9px 10px; border: 1px solid #dfe5dd; border-radius: 3px; outline: none; background: white; color: var(--ink); font-size: 12px; font-weight: 400; }
+    .field textarea { min-height: 76px; resize: vertical; }
+    .field .hint { color: var(--muted); font-size: 9px; font-weight: 400; line-height: 1.45; }
+    .form-actions { display: flex; gap: 8px; margin-top: 2px; }
+    .primary-button, .secondary-button { min-height: 40px; padding: 0 14px; border-radius: 3px; cursor: pointer; font-size: 11px; font-weight: 700; }
+    .primary-button { flex: 1; border: 0; background: var(--forest); color: white; }
+    .primary-button:hover { background: var(--forest-deep); }
+    .secondary-button { border: 1px solid var(--line); background: white; color: var(--ink); }
+    .status { min-height: 16px; margin: 12px 0 0; color: var(--forest); font-size: 11px; font-weight: 700; }
+    .status.error { color: #a52e24; }
+    .empty-state { padding: 32px 18px; color: var(--muted); text-align: center; font-size: 12px; }
+    @media (max-width: 850px) {
+      .manager-layout { grid-template-columns: 1fr; }
+      .editor-panel { position: static; }
+      .editor-panel { grid-row: 1; }
+    }
+    @media (max-width: 560px) {
+      .header-inner, main { width: calc(100% - 32px); }
+      main { padding-top: 25px; }
+      .brand { font-size: 19px; }
+      .brand img { height: 33px; }
+      .page-heading { align-items: flex-start; }
+      h1 { font-size: 30px; }
+      .panel-head { align-items: flex-start; flex-direction: column; }
+      .search { width: 100%; }
+      .product-row { grid-template-columns: 46px minmax(0, 1fr); gap: 10px; padding: 12px; }
+      .product-image-wrap { width: 46px; height: 50px; }
+      .product-image { width: 39px; height: 43px; }
+      .row-actions { grid-column: 2; }
+    }
+  </style>
+</head>
+<body>
+  <div class="announcement">Thoughtful care, right to your door. <strong>&nbsp; PharmaGo product management</strong></div>
+  <header class="header">
+    <div class="header-inner">
+      <a class="brand" href="index.html"><img src="gom.png" alt=""><span>PharmaGo</span></a>
+      <a class="back-link" href="index.html#shop">Back to storefront</a>
+    </div>
+  </header>
+  <main>
+    <div class="page-heading">
+      <div>
+        <p class="kicker">Store tools</p>
+        <h1>Product management</h1>
+        <p>Add, update, search, and remove products from the storefront catalog.</p>
+      </div>
+    </div>
+    <aside class="local-warning"><strong>Local catalog:</strong> Changes are saved in this browser only. This static demo has no admin login, shared database, or server synchronization; other browsers and devices will not see your changes.</aside>
+    <div class="manager-layout">
+      <section class="catalog-panel" aria-labelledby="catalog-title">
+        <div class="panel-head">
+          <h2 id="catalog-title">Catalog <span class="count" id="product-count"></span></h2>
+          <input class="search" id="product-search" type="search" placeholder="Search products" aria-label="Search products">
+        </div>
+        <div class="product-list" id="product-list" aria-live="polite"></div>
+      </section>
+      <section class="editor-panel" aria-labelledby="editor-title">
+        <div class="panel-head"><h2 id="editor-title">Add a product</h2></div>
+        <div class="editor-content">
+          <p class="editor-hint">Use the existing image filename from the project folder. Product IDs are created automatically.</p>
+          <form class="editor-form" id="product-form">
+            <input type="hidden" name="id">
+            <label class="field">Product name<input name="name" required maxlength="100"></label>
+            <label class="field">Category<input name="category" required maxlength="60" placeholder="e.g. Personal care"></label>
+            <label class="field">Short note<input name="note" required maxlength="120" placeholder="Short product summary"></label>
+            <label class="field">Pack size<input name="size" required maxlength="80" placeholder="e.g. 60 tablets"></label>
+            <label class="field">Price in naira<input name="price" type="number" min="1" step="1" required></label>
+            <label class="field">Product image filename<input name="image" required maxlength="180" placeholder="image-name.jpg"><span class="hint">Place the image in the project folder, then enter its filename here.</span></label>
+            <label class="field">Product description<textarea name="description" required maxlength="1000"></textarea></label>
+            <label class="field">Product tag (optional)<input name="tag" maxlength="40" placeholder="e.g. New"></label>
+            <div class="form-actions"><button class="primary-button" id="save-product" type="submit">Add product</button><button class="secondary-button" id="cancel-edit" type="button" hidden>Cancel</button></div>
+          </form>
+          <p class="status" id="status" role="status" aria-live="polite"></p>
+        </div>
+      </section>
+    </div>
+  </main>
+  <script src="products.js"></script>
+  <script>
+    const productList = document.getElementById('product-list');
+    const productForm = document.getElementById('product-form');
+    const searchInput = document.getElementById('product-search');
+    const statusMessage = document.getElementById('status');
+    const catalogKey = 'pharmago-products';
+
+    function safeText(value) {
+      return String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
+    }
+    function formatPrice(amount) {
+      return 'N' + amount.toLocaleString('en-NG');
+    }
+    function setStatus(message, isError) {
+      statusMessage.textContent = message;
+      statusMessage.classList.toggle('error', Boolean(isError));
+    }
+    function renderProducts() {
+      const query = searchInput.value.trim().toLowerCase();
+      const filtered = products.filter(product =>
+        `${product.name} ${product.category} ${product.note}`.toLowerCase().includes(query)
+      );
+      document.getElementById('product-count').textContent = `(${products.length})`;
+      if (!filtered.length) {
+        productList.innerHTML = '<p class="empty-state">No products match this search.</p>';
+        return;
+      }
+      productList.innerHTML = filtered.map(product => `
+        <article class="product-row">
+          <div class="product-image-wrap" style="--wash:${safeText(product.wash || '#f4f4ee')}"><img class="product-image" src="${safeText(product.image)}" alt=""></div>
+          <div>
+            <h3>${safeText(product.name)}</h3>
+            <div class="product-meta"><span>${safeText(product.category)}</span><span>${safeText(product.size)}</span><strong>${formatPrice(product.price)}</strong></div>
+          </div>
+          <div class="row-actions">
+            <button class="small-button" type="button" data-edit="${safeText(product.id)}">Edit</button>
+            <button class="small-button delete" type="button" data-delete="${safeText(product.id)}">Remove</button>
+          </div>
+        </article>`).join('');
+    }
+    function setFormProduct(product) {
+      for (const field of productForm.elements) {
+        if (field.name && Object.hasOwn(product, field.name)) field.value = product[field.name];
+      }
+      document.getElementById('editor-title').textContent = 'Edit product';
+      document.getElementById('save-product').textContent = 'Save changes';
+      document.getElementById('cancel-edit').hidden = false;
+      setStatus(`Editing ${product.name}.`, false);
+      document.getElementById('editor-title').scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }
+    function resetForm() {
+      productForm.reset();
+      productForm.elements.namedItem('id').value = '';
+      document.getElementById('editor-title').textContent = 'Add a product';
+      document.getElementById('save-product').textContent = 'Add product';
+      document.getElementById('cancel-edit').hidden = true;
+      setStatus('', false);
+    }
+    function saveCatalog(nextProducts, successMessage) {
+      try {
+        window.saveProductCatalog(nextProducts);
+        products.splice(0, products.length, ...nextProducts);
+        setStatus(successMessage, false);
+        renderProducts();
+        return true;
+      } catch (error) {
+        setStatus(`Could not save the catalog: ${error.message}`, true);
+        return false;
+      }
+    }
+
+    productList.addEventListener('click', event => {
+      const editButton = event.target.closest('[data-edit]');
+      const deleteButton = event.target.closest('[data-delete]');
+      if (editButton) {
+        const product = products.find(item => item.id === editButton.dataset.edit);
+        if (product) setFormProduct(product);
+        return;
+      }
+      if (!deleteButton) return;
+      const product = products.find(item => item.id === deleteButton.dataset.delete);
+      if (!product || !window.confirm(`Remove ${product.name} from the storefront catalog?`)) return;
+      const nextProducts = products.filter(item => item.id !== product.id);
+      try {
+        const savedCart = JSON.parse(localStorage.getItem('pharmago-cart') || '{}');
+        if (savedCart && typeof savedCart === 'object' && !Array.isArray(savedCart)) {
+          delete savedCart[product.id];
+          localStorage.setItem('pharmago-cart', JSON.stringify(savedCart));
+        }
+      } catch (error) {
+        setStatus(`Product was not removed because the saved cart could not be updated: ${error.message}`, true);
+        return;
+      }
+      if (saveCatalog(nextProducts, `${product.name} removed.`) && productForm.elements.namedItem('id').value === product.id) resetForm();
+    });
+
+    productForm.addEventListener('submit', event => {
+      event.preventDefault();
+      if (!productForm.reportValidity()) return;
+      const details = new FormData(productForm);
+      const originalId = String(details.get('id')).trim();
+      const name = String(details.get('name')).trim();
+      const category = String(details.get('category')).trim();
+      const note = String(details.get('note')).trim();
+      const size = String(details.get('size')).trim();
+      const image = String(details.get('image')).trim();
+      const description = String(details.get('description')).trim();
+      const tag = String(details.get('tag')).trim();
+      const price = Number(details.get('price'));
+      if (!name || !category || !note || !size || !image || !description || !Number.isSafeInteger(price) || price < 1) {
+        setStatus('Enter all required fields and a whole-number price greater than zero.', true);
+        return;
+      }
+      const originalProduct = products.find(product => product.id === originalId);
+      const id = originalProduct ? originalProduct.id : name.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || `product-${Date.now()}`;
+      if (!originalProduct && products.some(product => product.id === id)) {
+        setStatus('A product with that name already exists. Use a different name.', true);
+        return;
+      }
+      const product = {
+        id,
+        name,
+        category,
+        note,
+        size,
+        price,
+        tag,
+        image,
+        description,
+        accent: originalProduct ? originalProduct.accent : '#83b4a0',
+        wash: originalProduct ? originalProduct.wash : '#e9f1eb'
+      };
+      const nextProducts = originalProduct
+        ? products.map(item => item.id === originalId ? product : item)
+        : [...products, product];
+      if (saveCatalog(nextProducts, `${name} ${originalProduct ? 'updated' : 'added'}.`)) resetForm();
+    });
+
+    document.getElementById('cancel-edit').addEventListener('click', resetForm);
+    searchInput.addEventListener('input', renderProducts);
+    renderProducts();
+  </script>
+</body>
+</html>

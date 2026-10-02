@@ -1,0 +1,33 @@
+name: pharmago
+description: Cross-platform pharmacy marketplace for buyers, sellers, and administrators.
+publish_to: none
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.5.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_secure_storage: ^9.2.4
+  http: ^1.3.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  lints: ^5.1.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - 1a8ee9606909489d6cb71348387babba.jpg
+    - Antiseptic First Aid.jpg
+    - Daily Sunscreen SPF 50.jpg
+    - gom.png
+    - images.jpg
+    - multivitamin.jpg
+    - s-l1600.webp
+    - Soothing Skin Balm.jpg
+    - sudrex.jpg
+    - vaseline.jpg
+    - Vitamin-C-1000mg-Mega-C-1.webp

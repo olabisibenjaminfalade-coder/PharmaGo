@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#12483b">
+  <meta name="description" content="Review your PharmaGo order and provide delivery details.">
+  <title>Checkout | PharmaGo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+      --forest: #12483b;
+      --forest-deep: #0d382e;
+      --leaf: #c9ef62;
+      --paper: #f8f8f3;
+      --white: #fff;
+      --ink: #1c2925;
+      --muted: #707b76;
+      --line: #e4e8e1;
+      --sans: 'DM Sans', 'Segoe UI', sans-serif;
+      --serif: 'DM Serif Display', Georgia, 'Times New Roman', serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); }
+    a { color: inherit; text-decoration: none; }
+    button, input, select, textarea { font: inherit; }
+    .announcement { min-height: 34px; display: flex; justify-content: center; align-items: center; padding: 7px 18px; background: var(--forest); color: white; text-align: center; font-size: 11px; letter-spacing: .35px; }
+    .announcement strong { color: var(--leaf); }
+    .site-header { background: var(--white); border-bottom: 1px solid var(--line); }
+    .header-main { width: min(1160px, calc(100% - 48px)); min-height: 72px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+    .brand { display: inline-flex; align-items: center; gap: 9px; color: var(--forest); font-size: 22px; font-weight: 800; letter-spacing: -.7px; }
+    .brand-mark { width: auto; height: 38px; }
+    .secure-note { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); font-size: 12px; }
+    .secure-note svg { width: 16px; height: 16px; color: var(--forest); }
+    main { width: min(1100px, calc(100% - 48px)); margin: 0 auto; padding: 35px 0 72px; }
+    .checkout-top { margin-bottom: 25px; }
+    .back-link { color: var(--forest); font-size: 12px; font-weight: 700; }
+    h1 { margin: 12px 0 5px; color: var(--forest-deep); font: 500 34px/1.1 var(--serif); }
+    .intro { margin: 0; color: var(--muted); font-size: 13px; }
+    .checkout-layout { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(320px, .85fr); gap: 32px; align-items: start; }
+    .checkout-form, .order-panel { background: var(--white); border: 1px solid var(--line); }
+    .checkout-form { padding: clamp(22px, 4vw, 38px); }
+    .step-heading { display: flex; align-items: center; gap: 11px; margin: 0 0 19px; color: var(--ink); font-size: 16px; font-weight: 700; }
+    .step-number { width: 27px; height: 27px; display: inline-grid; place-items: center; border-radius: 50%; background: #e8f0e5; color: var(--forest); font-size: 12px; }
+    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px 13px; }
+    .field { display: grid; gap: 6px; color: #46524c; font-size: 11px; font-weight: 700; }
+    .field.full { grid-column: 1 / -1; }
+    .field input, .field select, .field textarea { width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid #dfe5dd; border-radius: 3px; outline: none; background: white; color: var(--ink); font-size: 13px; }
+    .field textarea { min-height: 75px; resize: vertical; }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--forest); box-shadow: 0 0 0 3px #12483b16; }
+    .section-divider { margin: 27px 0 24px; border: 0; border-top: 1px solid var(--line); }
+    .delivery-choice { display: flex; align-items: flex-start; gap: 11px; padding: 14px; border: 1px solid var(--forest); border-radius: 3px; background: #f7faf4; }
+    .delivery-choice input { margin: 2px 0 0; accent-color: var(--forest); }
+    .delivery-choice strong { display: block; margin-bottom: 4px; font-size: 12px; }
+    .delivery-choice span { color: var(--muted); font-size: 11px; line-height: 1.5; }
+    .payment-options { display: grid; gap: 9px; }
+    .payment-choice { display: flex; align-items: flex-start; gap: 11px; padding: 13px 14px; border: 1px solid var(--line); border-radius: 3px; cursor: pointer; }
+    .payment-choice:has(input:checked) { border-color: var(--forest); background: #f7faf4; }
+    .payment-choice input { margin: 2px 0 0; accent-color: var(--forest); }
+    .payment-choice strong { display: block; margin-bottom: 4px; color: var(--ink); font-size: 12px; }
+    .payment-choice span { color: var(--muted); font-size: 11px; line-height: 1.5; }
+    .payment-demo-warning { margin: 13px 0 0; padding: 11px 12px; border-left: 3px solid #d5a437; background: #fff8e8; color: #64552f; font-size: 11px; line-height: 1.6; }
+    .submit-button { width: 100%; min-height: 48px; margin-top: 24px; border: 0; border-radius: 3px; background: var(--forest); color: white; cursor: pointer; font-size: 13px; font-weight: 700; }
+    .submit-button:hover { background: var(--forest-deep); }
+    .demo-note { margin: 13px 0 0; color: var(--muted); font-size: 11px; line-height: 1.6; text-align: center; }
+    .order-panel { position: sticky; top: 20px; padding: 24px; }
+    .order-panel h2 { margin: 0 0 19px; color: var(--forest-deep); font-size: 15px; }
+    .order-items { display: grid; gap: 15px; max-height: 360px; overflow-y: auto; }
+    .order-item { display: grid; grid-template-columns: 55px minmax(0, 1fr) auto; gap: 11px; align-items: center; }
+    .item-image-wrap { position: relative; width: 55px; height: 58px; display: grid; place-items: center; background: var(--wash); }
+    .item-image { width: 42px; height: 48px; object-fit: contain; border-radius: 3px; background: #fffef9; }
+    .item-quantity { position: absolute; top: -7px; right: -7px; min-width: 19px; height: 19px; display: grid; place-items: center; padding-inline: 4px; border-radius: 50%; background: var(--forest); color: white; font-size: 10px; font-weight: 700; }
+    .item-name { margin: 0 0 4px; font-size: 11px; font-weight: 700; line-height: 1.4; }
+    .item-size { color: var(--muted); font-size: 10px; }
+    .item-price { white-space: nowrap; font-size: 11px; font-weight: 700; }
+    .order-divider { margin: 20px 0 15px; border: 0; border-top: 1px solid var(--line); }
+    .total-row { display: flex; justify-content: space-between; gap: 12px; margin-top: 12px; color: #526057; font-size: 12px; }
+    .total-row strong { color: var(--ink); font-weight: 700; }
+    .total-row.grand { margin-top: 17px; padding-top: 15px; border-top: 1px solid var(--line); color: var(--ink); font-size: 14px; font-weight: 700; }
+    .grand strong { color: var(--forest); font-size: 18px; }
+    .delivery-disclaimer { margin: 15px 0 0; color: var(--muted); font-size: 10px; line-height: 1.6; }
+    .empty-state, .confirmation { padding: 50px 25px; background: white; border: 1px solid var(--line); text-align: center; }
+    .empty-state h2, .confirmation h2 { margin: 0 0 10px; color: var(--forest-deep); font: 500 29px/1.15 var(--serif); }
+    .empty-state p, .confirmation p { margin: 0 auto 22px; max-width: 470px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .shop-link { min-height: 43px; display: inline-flex; align-items: center; justify-content: center; padding: 0 20px; border-radius: 3px; background: var(--forest); color: white; font-size: 12px; font-weight: 700; }
+    .form-error { margin: 14px 0 0; color: #a52e24; font-size: 12px; font-weight: 700; }
+    .confirmation-mark { width: 46px; height: 46px; margin: 0 auto 17px; display: grid; place-items: center; border-radius: 50%; background: #e8f0e5; color: var(--forest); font-size: 24px; }
+    @media (max-width: 760px) {
+      .header-main, main { width: calc(100% - 32px); }
+      main { padding-top: 26px; }
+      .secure-note { font-size: 0; }
+      .secure-note svg { width: 19px; height: 19px; }
+      h1 { font-size: 30px; }
+      .checkout-layout { grid-template-columns: 1fr; gap: 17px; }
+      .order-panel { position: static; grid-row: 1; padding: 19px; }
+      .checkout-form { padding: 21px 17px; }
+    }
+    @media (max-width: 440px) {
+      .field-grid { grid-template-columns: 1fr; }
+      .field.full { grid-column: auto; }
+      .brand { font-size: 19px; }
+      .brand-mark { height: 33px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="announcement">Thoughtful care, right to your door. <strong>&nbsp; Free delivery on orders over N25,000</strong></div>
+  <header class="site-header">
+    <div class="header-main">
+      <a class="brand" href="index.html" aria-label="PharmaGo home"><img class="brand-mark" src="gom.png" alt=""><span>PharmaGo</span></a>
+      <span class="secure-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg> Secure checkout</span>
+    </div>
+  </header>
+  <main>
+    <div class="checkout-top">
+      <a class="back-link" href="index.html#shop">← Continue shopping</a>
+      <h1>Checkout</h1>
+      <p class="intro">Enter your contact and delivery details to request your order.</p>
+    </div>
+    <div id="checkout-content" aria-live="polite"></div>
+  </main>
+  <script src="products.js"></script>
+  <script>
+    const content = document.getElementById('checkout-content');
+    const formatPrice = amount => 'N' + amount.toLocaleString('en-NG');
+    const safeText = value => String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
+    const areas = ['Gombe town', 'Pantami', 'Bolari', 'Shamaki', 'Other Gombe area'];
+
+    function getCart() {
+      try {
+        const savedCart = JSON.parse(localStorage.getItem('pharmago-cart') || '{}');
+        if (!savedCart || typeof savedCart !== 'object' || Array.isArray(savedCart)) {
+          throw new Error('Saved cart has an invalid format.');
+        }
+        return Object.fromEntries(Object.entries(savedCart)
+          .filter(([id, quantity]) => products.some(product => product.id === id) && Number.isSafeInteger(quantity) && quantity > 0));
+      } catch {
+        document.title = 'Checkout unavailable | PharmaGo';
+        content.innerHTML = '<section class="empty-state"><h2>We could not load your cart</h2><p>Your cart data is unavailable in this browser. Return to the shop and try again.</p><a class="shop-link" href="index.html#shop">Return to shop</a></section>';
+        return null;
+      }
+    }
+
+    function renderCheckout(cart) {
+      if (!cart) return false;
+      const items = products.filter(product => cart[product.id]);
+      if (!items.length) {
+        content.innerHTML = '<section class="empty-state"><h2>Your cart is empty</h2><p>Add a few essentials to your cart before continuing to checkout.</p><a class="shop-link" href="index.html#shop">Browse the shop</a></section>';
+        return false;
+      }
+      const subtotal = items.reduce((sum, product) => sum + product.price * cart[product.id], 0);
+      content.innerHTML = `
+        <div class="checkout-layout">
+          <form class="checkout-form" id="checkout-form">
+            <h2 class="step-heading"><span class="step-number">1</span> Contact information</h2>
+            <div class="field-grid">
+              <label class="field"><span>Email address</span><input name="email" type="email" autocomplete="email" placeholder="you@example.com" required></label>
+              <label class="field"><span>Phone number</span><input name="phone" type="tel" autocomplete="tel" placeholder="e.g. 080 1234 5678" required></label>
+            </div>
+            <hr class="section-divider">
+            <h2 class="step-heading"><span class="step-number">2</span> Delivery details</h2>
+            <div class="field-grid">
+              <label class="field"><span>First name</span><input name="firstName" autocomplete="given-name" required></label>
+              <label class="field"><span>Last name</span><input name="lastName" autocomplete="family-name" required></label>
+              <label class="field full"><span>Delivery address</span><input name="address" autocomplete="street-address" placeholder="House number and street" required></label>
+              <label class="field"><span>City or town</span><input name="city" autocomplete="address-level2" placeholder="Gombe" required></label>
+              <label class="field"><span>Area</span><select name="area" required><option value="">Choose your area</option>${areas.map(area => `<option value="${safeText(area)}">${safeText(area)}</option>`).join('')}</select></label>
+              <label class="field full"><span>Delivery instructions <span style="font-weight:400">(optional)</span></span><textarea name="instructions" placeholder="Any directions to help us find you?"></textarea></label>
+            </div>
+            <hr class="section-divider">
+            <h2 class="step-heading"><span class="step-number">3</span> Delivery method</h2>
+            <label class="delivery-choice"><input type="radio" name="delivery" value="home" checked><span><strong>Home delivery</strong>Our team will confirm the delivery fee and estimated time with you by phone.</span></label>
+            <hr class="section-divider">
+            <h2 class="step-heading"><span class="step-number">4</span> Payment method <span style="margin-left:auto;padding:4px 7px;border-radius:3px;background:#fff3d4;color:#725b20;font-size:9px;letter-spacing:.6px">DEMO</span></h2>
+            <div class="payment-options" role="radiogroup" aria-label="Choose a demo payment method">
+              <label class="payment-choice"><input type="radio" name="payment" value="card" checked><span><strong>Card payment (demo)</strong>Preview the simulated card-payment confirmation. Do not enter card details.</span></label>
+              <label class="payment-choice"><input type="radio" name="payment" value="transfer"><span><strong>Bank transfer (demo)</strong>Preview a transfer flow. No bank details or transfer instructions are real.</span></label>
+              <label class="payment-choice"><input type="radio" name="payment" value="delivery"><span><strong>Pay on delivery (demo)</strong>Preview an order request marked for payment on delivery.</span></label>
+            </div>
+            <p class="payment-demo-warning">Demo only: this checkout cannot charge you, accept payment details, or send orders to PharmaGo. No real payment is made.</p>
+            <p class="form-error" id="form-error" role="alert" hidden></p>
+            <button class="submit-button" type="submit" id="submit-order">Simulate card payment — no charge</button>
+            <p class="demo-note">All details stay in this browser. The demo confirmation is not a receipt, successful payment, or confirmed order.</p>
+          </form>
+          <aside class="order-panel" aria-labelledby="order-heading">
+            <h2 id="order-heading">Order summary (${items.reduce((total, product) => total + cart[product.id], 0)} items)</h2>
+            <div class="order-items">${items.map(product => `
+              <article class="order-item">
+                <div class="item-image-wrap" style="--wash:${product.wash}">
+                  <img class="item-image" src="${safeText(product.image)}" alt="">
+                  <span class="item-quantity">${cart[product.id]}</span>
+                </div>
+                <div><p class="item-name">${safeText(product.name)}</p><span class="item-size">${safeText(product.size)}</span></div>
+                <span class="item-price">${formatPrice(product.price * cart[product.id])}</span>
+              </article>`).join('')}
+            </div>
+            <hr class="order-divider">
+            <div class="total-row"><span>Subtotal</span><strong>${formatPrice(subtotal)}</strong></div>
+            <div class="total-row"><span>Delivery</span><strong>${subtotal > 25000 ? 'Free' : 'Confirmed after request'}</strong></div>
+            <div class="total-row grand"><span>Total before delivery</span><strong>${formatPrice(subtotal)}</strong></div>
+            <p class="delivery-disclaimer">Orders over N25,000 receive free delivery. For other orders, the delivery fee will be confirmed before your order is finalized.</p>
+          </aside>
+        </div>`;
+
+      const checkoutForm = document.getElementById('checkout-form');
+      const submitOrder = document.getElementById('submit-order');
+      const paymentLabels = {
+        card: 'Simulate card payment — no charge',
+        transfer: 'Simulate bank transfer — no payment',
+        delivery: 'Place demo order — pay on delivery'
+      };
+      checkoutForm.querySelectorAll('input[name="payment"]').forEach(input => {
+        input.addEventListener('change', () => {
+          submitOrder.textContent = paymentLabels[input.value];
+        });
+      });
+      checkoutForm.addEventListener('submit', event => {
+        event.preventDefault();
+        const form = event.currentTarget;
+        if (!form.reportValidity()) return;
+        const details = new FormData(form);
+        const firstName = String(details.get('firstName')).trim();
+        const lastName = String(details.get('lastName')).trim();
+        const email = String(details.get('email')).trim();
+        const phone = String(details.get('phone')).trim();
+        const address = String(details.get('address')).trim();
+        const city = String(details.get('city')).trim();
+        const area = String(details.get('area'));
+        const payment = String(details.get('payment'));
+        const error = document.getElementById('form-error');
+        if (![firstName, lastName, email, phone, address, city, area].every(Boolean) || !Object.hasOwn(paymentLabels, payment)) {
+          error.textContent = 'Please complete each required contact and delivery field.';
+          error.hidden = false;
+          return;
+        }
+        try {
+          localStorage.removeItem('pharmago-cart');
+        } catch {
+          error.textContent = 'We could not complete this request because your cart could not be updated. Please try again.';
+          error.hidden = false;
+          return;
+        }
+      const paymentOutcome = payment === 'delivery'
+        ? 'Demo pay-on-delivery order preview. No order was sent and no payment is due.'
+        : payment === 'transfer'
+          ? 'Demo bank-transfer preview only. No transfer was made and no order was sent.'
+          : 'Demo card-payment preview only. No card details were collected, no charge was made, and no order was sent.';
+      document.querySelector('.checkout-top').hidden = true;
+      content.innerHTML = `<section class="confirmation"><div class="confirmation-mark" aria-hidden="true">✓</div><h2>Demo checkout complete, ${safeText(firstName)} ${safeText(lastName)}</h2><p>${safeText(paymentOutcome)} The simulated order total was ${safeText(formatPrice(subtotal))}. Contact, delivery and payment-choice details stayed in this browser and were not sent to PharmaGo.</p><a class="shop-link" href="index.html#shop">Return to the shop</a></section>`;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    }
+
+    renderCheckout(getCart());
+  </script>
+</body>
+</html>

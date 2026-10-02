@@ -1,0 +1,90 @@
+Attached Element Context from Integrated Browser
+
+Element: button.primary-button
+
+URL: file:///C:/Users/Olaben/Desktop/PharmaGo/signin.html
+
+HTML Path: main.auth-page > section.auth-card > div.auth-form-wrap > form#quick-signin-form.quick-form > button.primary-button
+
+Outer HTML:
+```html
+<button class="primary-button" type="submit">Get a sign-in link</button>
+```
+
+Dimensions:
+- top: 236px
+- left: 188px
+- width: 460px
+- height: 48px
+
+CSS:
+```css
+* { box-sizing: border-box; }
+button, input { font: inherit; }
+.primary-button { min-height: 48px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--forest);
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .18s ease, background .2s ease; }
+.primary-button:hover { background: var(--forest-deep);
+      transform: translateY(-1px); }
+
+/* Inherited */
+body { font-family: var(--sans); color: var(--ink) }
+
+/* Resolved values */
+margin: 0px /*UA*/;
+border-radius: 999px;
+border: 0px none rgb(255, 255, 255);
+transition: transform 0.18s, background 0.2s;
+appearance: auto /*UA*/;
+background-color: rgb(13, 56, 46) /*UA*/;
+box-sizing: border-box;
+color: rgb(255, 255, 255);
+cursor: pointer;
+display: block;
+font-family: "DM Sans", "Segoe UI", sans-serif;
+font-feature-settings: normal;
+font-kerning: auto;
+font-language-override: normal;
+font-optical-sizing: auto;
+font-size: 13px;
+font-size-adjust: none;
+font-stretch: 100%;
+font-style: normal;
+font-variant-alternates: normal;
+font-variant-caps: normal;
+font-variant-east-asian: normal;
+font-variant-emoji: normal;
+font-variant-ligatures: normal;
+font-variant-numeric: normal;
+font-variant-position: normal;
+font-variation-settings: normal;
+font-weight: 700;
+height: 48px;
+letter-spacing: normal /*UA*/;
+line-height: normal;
+min-height: 48px;
+padding-block-end: 1px /*UA*/;
+padding-block-start: 1px /*UA*/;
+padding-inline-end: 6px /*UA*/;
+padding-inline-start: 6px /*UA*/;
+text-align: center /*UA*/;
+text-indent: 0px /*UA*/;
+text-rendering: auto /*UA*/;
+text-shadow: none /*UA*/;
+text-transform: none /*UA*/;
+transform: matrix(1, 0, 0, 1, 0, -1);
+width: 460px;
+word-spacing: 0px /*UA*/;
+
+/* CSS variables */
+--sans: 'DM Sans', 'Segoe UI', sans-serif;
+--forest: #12483b;
+--forest-deep: #0d382e;
+--ink: #1c2925;
+```
